@@ -1,0 +1,27 @@
+.container {
+  display: flex;
+  flex-direction: column;
+
+  /* width: 400px; */
+  overflow: hidden;
+  line-height: 1.2em;
+}
+
+.title {
+  margin-top: 8px;
+  font-weight: 600;
+}
+
+.image {
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.price {
+  color: rgb(102, 102, 102);
+  font-size: 14px;
+}
+
+.rating {
+  font-size: 14px;
+}

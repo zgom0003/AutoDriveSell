@@ -6,24 +6,47 @@
 }
 
 .banner-overlay {
-    inset: 0px;
-    color: white;
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    justify-content: end;
-    padding: 50px;
+  inset: 0px;
+  color: white;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: end;
+  padding: 50px;
 }
 
 .heading {
-    font-size: 48px;
-    line-height: 1.2em;
-    margin: 0;
+  font-size: 48px;
+  line-height: 1.2em;
+  margin: 0;
+  font-weight: bold;
 }
 
 .sub-heading {
-    font-size: 28px;
-    line-height: 1.2em;
-    margin: 0;
+  font-size: 20px;
+  line-height: 1.2em;
+  margin: 0;
+  margin-bottom: 24px;
+  color: #ffffffdd;
+}
+
+.products-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.popular-picks {
+  font-weight: 500;
+  margin-top: 64px;
+  margin-bottom: 32px;
+}
+
+.listing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  width: 100vw;
+  gap: 52px;
+  width: 95%;
 }
