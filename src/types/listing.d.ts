@@ -3,4 +3,5 @@ export interface ListingInfo {
   title: string;
   price: number;
   rating?: number;
+  productLink: string;
 }

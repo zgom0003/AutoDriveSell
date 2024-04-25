@@ -50,3 +50,64 @@
   gap: 52px;
   width: 95%;
 }
+
+.support-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 86px;
+}
+
+.support-img {
+  object-fit: contain;
+  max-width: 100%;
+  margin: 0px;
+}
+
+.support-stack {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.support-stack:hover {
+  transform: scale(1.02);
+  z-index: 2;
+}
+
+.support-1 {
+  color: #fffc;
+}
+.support-1:hover {
+  color: #fff;
+}
+
+.support-2 {
+  color: #000c;
+}
+
+.support-2:hover {
+  color: #000;
+}
+
+.support-overlay {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  padding: 72px;
+  bottom: 0px;
+  gap: 8px;
+  max-width: 65%;
+}
+
+@media (width <= 1280px) {
+  .support-overlay {
+    max-width: 100%;
+  }
+}
+
+.support-header {
+  font-size: 46px;
+}

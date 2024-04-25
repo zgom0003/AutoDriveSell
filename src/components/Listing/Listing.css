@@ -5,11 +5,17 @@
   /* width: 400px; */
   overflow: hidden;
   line-height: 1.2em;
+  cursor: pointer;
+  color: black;
+}
+
+.container:hover {
+  color: black;
 }
 
 .title {
   margin-top: 8px;
-  font-weight: 600;
+  font-size: 18px;
 }
 
 .image {
@@ -19,9 +25,5 @@
 
 .price {
   color: rgb(102, 102, 102);
-  font-size: 14px;
-}
-
-.rating {
   font-size: 14px;
 }
