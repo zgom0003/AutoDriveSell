@@ -5,10 +5,10 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home/Home";
-import Catalogue from "./pages/Catalogue/Catalogue";
 import Layout from "./components/Layout";
 import { ThemeProvider } from "@mui/material/styles";
 import { theme } from "./theme";
+import AdminPage from "./pages/Admin/AdminPage"
 
 function App() {
   return (
@@ -16,8 +16,8 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="catalog" element={<Catalogue />} />
+            <Route index element={<Home />} />
+            <Route path="admin" element={<AdminPage />} />
           </Route>
         </Routes>
       </BrowserRouter>
