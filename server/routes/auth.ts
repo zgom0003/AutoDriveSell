@@ -13,6 +13,10 @@ router.get(
   }
 );
 
+router.get("/status", (req, res) => {
+  return res.json({ loggedIn: req.user !== null });
+});
+
 export function loggedIn(req, res, next) {
   if (req.user) {
     return next();

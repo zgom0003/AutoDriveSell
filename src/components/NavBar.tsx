@@ -18,14 +18,22 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
-import { useNavigate } from "react-router-dom";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import { useEffect, useState } from "react";
 
 const pages = ["Home", "Products", "Contact Us"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function NavBar() {
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
+  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
+
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_REACT_APP_SERVER_URL}/auth/status`, { credentials: "include", mode: "cors" })
+      .then((res) => res.json())
+      .then((data) => setLoggedIn(data.loggedIn === "true"));
+  }, []);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -189,9 +197,7 @@ function NavBar() {
           <Box sx={{ flexGrow: 0, pl: 3, pr: 3 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar>
-                  <PersonIcon />
-                </Avatar>
+                <Avatar>{loggedIn ? <AdminPanelSettingsIcon /> : <PersonIcon />}</Avatar>
               </IconButton>
             </Tooltip>
             <Menu
