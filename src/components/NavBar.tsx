@@ -19,7 +19,7 @@ import MenuItem from '@mui/material/MenuItem';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 
-const pages = ['Home', 'Products', 'Contact Us'];
+const pages = ['home', 'products', 'contact us'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function NavBar() {
@@ -117,7 +117,6 @@ function NavBar() {
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
-              aria-label="account of current user"
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
@@ -146,7 +145,6 @@ function NavBar() {
               {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
                   <Link to={"/" + page}>{page}</Link>
-                  {/* <Typography textAlign="center">{page}</Typography> */}
                 </MenuItem>
               ))}
             </Menu>
