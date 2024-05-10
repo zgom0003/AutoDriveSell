@@ -13,7 +13,7 @@ passport.use(
       // User.findOrCreate({ googleId: profile.id }, function (err, user) {
       //   return cb(err, user);
       // });
-      return done(null, profile);
+      return done(null, null);
     }
   )
 );

@@ -8,6 +8,7 @@ import Home from "./pages/Home/Home";
 import Layout from "./components/Layout";
 import { ThemeProvider } from "@mui/material/styles";
 import { theme } from "./theme";
+import LoginFailurePage from "./pages/LoginFailure/LoginFailure";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
+            <Route path="login-failure" element={<LoginFailurePage />} />
           </Route>
         </Routes>
       </BrowserRouter>

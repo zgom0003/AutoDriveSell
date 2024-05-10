@@ -8,8 +8,6 @@ const passportSetup = require("./passport");
 const session = require("express-session");
 var authRouter = require("./routes/auth");
 
-const cookieSession = require("cookie-session");
-
 app.use(express.urlencoded({ extended: false }));
 
 app.use(
