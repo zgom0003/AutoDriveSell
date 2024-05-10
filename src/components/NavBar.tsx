@@ -32,7 +32,9 @@ function NavBar() {
   useEffect(() => {
     fetch(`${import.meta.env.VITE_REACT_APP_SERVER_URL}/auth/status`, { credentials: "include", mode: "cors" })
       .then((res) => res.json())
-      .then((data) => setLoggedIn(data.loggedIn === "true"));
+      .then((data) => {
+        setLoggedIn(data.loggedIn);
+      });
   }, []);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {

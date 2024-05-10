@@ -14,7 +14,7 @@ router.get(
 );
 
 router.get("/status", (req, res) => {
-  return res.json({ loggedIn: req.user !== null });
+  return res.json({ loggedIn: req.user !== undefined });
 });
 
 export function loggedIn(req, res, next) {
