@@ -22,22 +22,6 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-const authUser = (user, password, done) => {
-  console.log(`Value of "User" in authUser function ----> ${user}`); //passport will populate, user = req.body.username
-  console.log(`Value of "Password" in authUser function ----> ${password}`); //passport will popuplate, password = req.body.password
-
-  // Use the "user" and "password" to search the DB and match user/password to authenticate the user
-  // 1. If the user not found, done (null, false)
-  // 2. If the password does not match, done (null, false)
-  // 3. If user found and password match, done (null, user)
-
-  let authenticated_user = { id: 123, name: "Kyle" };
-  //Let's assume that DB search that user found and password matched for Kyle
-
-  return done(null, false);
-  return done(null, authenticated_user);
-};
-
 app.use(express.static("dist"));
 
 app.use("/auth", authRouter);

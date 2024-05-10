@@ -1,5 +1,6 @@
 const passport = require("passport");
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+import prisma from "./prisma/prismaClient";
 
 passport.use(
   new GoogleStrategy(
@@ -9,11 +10,14 @@ passport.use(
       callbackURL: `${process.env.SERVER_URL}/auth/google/callback`,
     },
 
-    function (accessToken, refreshToken, profile, done) {
+    async function (accessToken, refreshToken, profile, done) {
       // User.findOrCreate({ googleId: profile.id }, function (err, user) {
       //   return cb(err, user);
       // });
-      return done(null, profile);
+      if (!profile?._json?.email) return done(null, null);
+
+      const foundAdmin = await prisma.admin.findFirst({ where: { email: profile?._json?.email } });
+      return done(null, foundAdmin);
     }
   )
 );

@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id            Int             @id @default(autoincrement())
+  name          String          @db.Text
+  description   String?         @db.Text
+  Rating        Rating[]
+  ProductOption ProductOption[]
+  imageUrl      String          @db.Text
+}
+
+model Admin {
+  id    Int    @id @default(autoincrement())
+  email String @unique
+}
+
+model ProductOption {
+  id        Int     @id @default(autoincrement())
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int
+  name      String  @db.Text
+  price     Int
+}
+
+model Rating {
+  id         Int     @id @default(autoincrement())
+  product    Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId  Int
+  rating     Float
+  desciption String? @db.Text
+}
