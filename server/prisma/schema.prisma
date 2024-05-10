@@ -36,3 +36,10 @@ model Rating {
   rating     Float
   desciption String? @db.Text
 }
+
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String
+  expiresAt DateTime
+}

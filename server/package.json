@@ -11,8 +11,14 @@
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^5.13.0",
+    "@quixo3/prisma-session-store": "^3.1.13",
     "@types/passport-google-oauth2": "^0.1.8",
+    "connect-sqlite3": "^0.9.15",
+    "cookie-parser": "^1.4.6",
+    "cookie-session": "^2.1.0",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
+    "express-mysql-session": "^3.0.2",
     "express-session": "^1.18.0",
     "passport": "^0.7.0",
     "passport-google-oauth": "^2.0.0",
@@ -27,7 +33,9 @@
   },
   "type": "commonjs",
   "compilerOptions": {
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "verbatimModuleSyntax": true,
+    "module": "nodenext"
   },
   "prisma": {
     "seed": "npx tsx ./prisma/seed.ts"
