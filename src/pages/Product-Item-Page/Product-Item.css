@@ -1,0 +1,26 @@
+.MuiGrid-container {
+  position: relative;
+  padding-top: 50px;
+}
+
+img {
+  object-fit: contain;
+  max-width: 100%;
+  margin: 0px;
+}
+
+.product-title {
+  font-size: 30px;
+  line-height: 1.2em;
+  font-weight: bold;
+}
+
+.product-price {
+  font-size: 20px;
+  line-height: 3em;
+  font-weight: bold;
+}
+
+.product-description {
+  margin-top: 15px;
+}
