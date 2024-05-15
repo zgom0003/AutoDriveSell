@@ -4,12 +4,13 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Home from "./pages/Home/Home";
-import Catalogue from "./pages/Catalogue/Catalogue";
 import Layout from "./components/Layout";
 import { ThemeProvider } from "@mui/material/styles";
 import { theme } from "./theme";
+import Home from "./pages/Home/Home";
 import LoginFailurePage from "./pages/LoginFailure/LoginFailure";
+import Catalogue from "./pages/Catalogue/Catalogue";
+import Basket from "./pages/Basket/Basket";
 import ProductItemPage from './pages/Product-Item-Page/Product-Item.tsx';
 
 
@@ -23,6 +24,7 @@ function App() {
             <Route path="login-failure" element={<LoginFailurePage />} />
             <Route path="products" element={<Catalogue />} />
             <Route path="products/:itemId" element={<ProductItemPage />} />
+            <Route path="basket" element={<Basket />} />
           </Route>
         </Routes>
       </BrowserRouter>
