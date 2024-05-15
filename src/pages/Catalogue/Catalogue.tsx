@@ -15,21 +15,6 @@ import { useEffect, useState } from 'react';
 
 import './Catalogue.css'
 
-const imgSrc =
-  "https://images.drive.com.au/driveau/image/upload/c_fill,f_auto,g_auto,h_1080,q_auto:eco,w_1920/v1/cms/uploads/jmnrqauksfaore9gv7bn";
-const popularListings: ListingInfo[] = [
-  { imgSrc: imgSrc, title: "Product 1", price: 15000, rating: 4.3, productLink: "item1" },
-  { imgSrc: imgSrc, title: "Product 2", price: 9000, rating: 5.0, productLink: "item2" },
-  { imgSrc: imgSrc, title: "Product 3", price: 14000, rating: 5.0, productLink: "item3" },
-  { imgSrc: imgSrc, title: "Product 4", price: 5000, rating: 4.3, productLink: "item4" },
-  { imgSrc: imgSrc, title: "Product 5", price: 10000, rating: 5.0, productLink: "item5" },
-  { imgSrc: imgSrc, title: "Product 6", price: 14500, rating: 5.0, productLink: "item6" },
-  { imgSrc: imgSrc, title: "Product 7", price: 15500, rating: 4.3, productLink: "item7" },
-  { imgSrc: imgSrc, title: "Product 8", price: 8000, rating: 5.0, productLink: "item8" },
-  { imgSrc: imgSrc, title: "Product 8", price: 8000, rating: 5.0, productLink: "item8" },
-  { imgSrc: imgSrc, title: "Product 8", price: 8000, rating: 5.0, productLink: "item8" },
-];
-
 export default function Catalogue() {
 
     const imgSrc =
