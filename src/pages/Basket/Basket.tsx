@@ -98,11 +98,11 @@ function Items( {items} ) {
             maxWidth: '900px'
         }}
         >
-            <div className="divider"></div>
+            <div className="b-divider"></div>
             {items.map((item: ListingInfo, index: number) => (
                 <>
                 <BasketListing {...item} key={index}/>
-                <div className="divider"></div>
+                <div className="b-divider"></div>
                 </>
             ))}
 
