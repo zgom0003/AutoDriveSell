@@ -21,8 +21,8 @@ function App() {
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="login-failure" element={<LoginFailurePage />} />
-            <Route path="catalog" element={<Catalogue />} />
-            <Route path="catalog/:itemId" element={<ProductItemPage />} />
+            <Route path="products" element={<Catalogue />} />
+            <Route path="products/:itemId" element={<ProductItemPage />} />
           </Route>
         </Routes>
       </BrowserRouter>
