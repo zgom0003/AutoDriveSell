@@ -8,13 +8,10 @@ import Home from "./pages/Home/Home";
 import Layout from "./components/Layout";
 import { ThemeProvider } from "@mui/material/styles";
 import { theme } from "./theme";
-<<<<<<< HEAD
-import AdminPage from "./pages/Admin/AdminPage"
-=======
+import AdminPage from "./pages/Admin/AdminPage";
 import LoginFailurePage from "./pages/LoginFailure/LoginFailure";
-import ProductItemPage from './pages/Product-Item-Page/Product-Item.tsx';
-
->>>>>>> 3db3a8b797b4e76b4211d78b3dad26fa7a8f9751
+import ProductItemPage from './pages/Product-Item-Page/Product-Item';
+import Catalogue from "./pages/Catalogue/Catalogue";
 
 function App() {
   return (
@@ -23,15 +20,12 @@ function App() {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
-<<<<<<< HEAD
             <Route path="admin" element={<AdminPage />} />
-=======
             <Route path="login-failure" element={<LoginFailurePage />} />
             <Route path="catalog" element={<Catalogue />} />
           </Route>
           <Route path="/catalog/" element={<Layout />}>
             <Route path="item1" element={<ProductItemPage />} />
->>>>>>> 3db3a8b797b4e76b4211d78b3dad26fa7a8f9751
           </Route>
         </Routes>
       </BrowserRouter>
