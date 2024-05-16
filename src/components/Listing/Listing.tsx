@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 export default function Listing(props: ListingInfo) {
   return (
-    <Link className="container" to={"/catalog/" + props.productLink}>
+    <Link className="container" to={"/products/" + props.productLink}>
       <img src={props.imgSrc} alt="listing img" className="image" />
       <p className="title">{props.title}</p>
       <p className="price">{"from $" + props.price.toLocaleString()}</p>
