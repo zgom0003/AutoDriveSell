@@ -17,39 +17,36 @@ import './Catalogue.css'
 
 export default function Catalogue() {
 
-    const imgSrc =
-  "https://images.drive.com.au/driveau/image/upload/c_fill,f_auto,g_auto,h_1080,q_auto:eco,w_1920/v1/cms/uploads/jmnrqauksfaore9gv7bn";
-    const popularListings: ListingInfo[] = [
-    { imgSrc: imgSrc, title: "Product 1", price: 15000, rating: 4.3, productLink: "item1" },
-    { imgSrc: imgSrc, title: "Product 2", price: 9000, rating: 5.0, productLink: "item2" },
-    { imgSrc: imgSrc, title: "Product 3", price: 14000, rating: 5.0, productLink: "item3" },
-    { imgSrc: imgSrc, title: "Product 4", price: 5000, rating: 4.3, productLink: "item4" },
-    { imgSrc: imgSrc, title: "Product 5", price: 10000, rating: 5.0, productLink: "item5" },
-    { imgSrc: imgSrc, title: "Product 6", price: 14500, rating: 5.0, productLink: "item6" },
-    { imgSrc: imgSrc, title: "Product 7", price: 15500, rating: 4.3, productLink: "item7" },
-    { imgSrc: imgSrc, title: "Product 8", price: 8000, rating: 5.0, productLink: "item8" },
-    { imgSrc: imgSrc, title: "Product 9", price: 8000, rating: 5.0, productLink: "item8" },
-    { imgSrc: imgSrc, title: "Product 10", price: 8000, rating: 5.0, productLink: "item8" },
-    ];
+    const [products, setProducts] = useState([]);
 
-    const [prod, setProd] = useState(popularListings);
-
-    const handleShowMore = () => {
-
-        const newProd = [
-            { imgSrc: imgSrc, title: "Product 11", price: 8000, rating: 5.0, productLink: "item8" },
-            { imgSrc: imgSrc, title: "Product 12", price: 8000, rating: 5.0, productLink: "item8" },
-            { imgSrc: imgSrc, title: "Product 13", price: 8000, rating: 5.0, productLink: "item8" },
-            { imgSrc: imgSrc, title: "Product 14", price: 8000, rating: 5.0, productLink: "item8" },
-            { imgSrc: imgSrc, title: "Product 15", price: 8000, rating: 5.0, productLink: "item8" },
-        ];
-
-        setProd(prevProducts => [...prevProducts, ...newProd]);
-    }
+    const [itemCount, setItemCount] = useState(10);
+    const [rating, setRating] = useState('');
+    const [sortBy, setSortBy] = useState('');
+    const [priceRange, setPriceRange] = useState('2000:20000');
 
     useEffect(() => {
-        // fetch products from backend
-    }, [])
+
+        fetch(`http://localhost:3000/api/catalog?itemCount=${itemCount}&rating=${rating}&sortBy=${sortBy}&priceRange=${priceRange}`)
+            .then(res => res.json())
+            .then(data => setProducts(data.products));
+
+    }, [itemCount, rating, sortBy, priceRange]);
+
+    const ProductDisplay = () => (
+
+        <div style={{
+            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+            marginBottom: '30px'
+            }}>
+            <div className="catalog-grid">
+                {products.map((listing, i) => (
+                    <Listing {...listing} key={i} />
+                ))}
+            </div>
+
+            <Button variant="contained" sx={{width: 300}} onClick={() => setItemCount(prev => prev + 5)}>Show More</Button>
+        </div>
+    );
 
     return (
         <div className="catalog-page">
@@ -57,54 +54,58 @@ export default function Catalogue() {
             
                 <h2>Filter By</h2>
                 <div className="divider"></div>
+
                 <p><b>Rating</b></p>
-                <div className="ratings-filter">
-                    <div className="rating-button">
-                        <Rating rating={5.0} />
-                    </div>
-                    <div className="rating-button">
-                        <Rating rating={4.0} />
-                    </div>
-                    <div className="rating-button">
-                        <Rating rating={3.0} />
-                    </div>
-                    <div className="rating-button">
-                        <Rating rating={2.0} />
-                    </div>
-                    <div className="rating-button">
-                        <Rating rating={1.0} />
-                    </div>
-                </div>
+                <RatingFilter setRating={setRating}/>
                 <div className="divider"></div>
+
                 <p><b>Price Range</b></p>
-                <MinimumDistanceSlider />
+                <MinimumDistanceSlider setPriceRange={setPriceRange}/>
 
                 <div className="divider"></div>
                 <p><b>Sort By</b></p>
-                <RadioButtonsGroup />
+                <RadioButtonsGroup setSortBy={setSortBy}/>
 
                 <div className="divider"></div>
 
             </div>
 
-            <div style={{
-                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                marginBottom: '30px'
-                }}>
-                <div className="catalog-grid">
-                    {prod.map((listing, i) => (
-                        <Listing {...listing} key={i} />
-                    ))}
-                </div>
-
-                <Button variant="contained" sx={{width: 300}} onClick={handleShowMore}>Show More</Button>
-            </div>
+            <ProductDisplay />
 
         </div>
     );
 }
 
-function RadioButtonsGroup() {
+function RatingFilter({ setRating }) {
+
+    const handleChange = (rating) => setRating(rating)
+
+    return (
+        <div className="ratings-filter">
+            <div className="rating-button" onClick={() => handleChange(5)}>
+                <Rating rating={5.0} />
+            </div>
+            <div className="rating-button" onClick={() => handleChange(4)}>
+                <Rating rating={4.0} />
+            </div>
+            <div className="rating-button" onClick={() => handleChange(3)}>
+                <Rating rating={3.0} />
+            </div>
+            <div className="rating-button" onClick={() => handleChange(2)}>
+                <Rating rating={2.0} />
+            </div>
+            <div className="rating-button" onClick={() => handleChange(1)}>
+                <Rating rating={1.0} />
+            </div>
+        </div>
+    );
+}
+
+function RadioButtonsGroup({ setSortBy }) {
+
+    const handleChange = (event) => {
+        setSortBy(event.target.value);
+    }
 
     return (
       <FormControl sx={{color: 'lightgray'}}>
@@ -112,8 +113,8 @@ function RadioButtonsGroup() {
           aria-labelledby="demo-radio-buttons-group-label"
           defaultValue="female"
           name="radio-buttons-group"
+          onChange={handleChange}
         >
-          <FormControlLabel value="newest" control={<Radio sx={{color: 'lightgray'}}/>} label="Newest" />
           <FormControlLabel value="low" control={<Radio sx={{color: 'lightgray'}} />} label="Price - Low to High" />
           <FormControlLabel value="high" control={<Radio sx={{color: 'lightgray'}}/>} label="Price - High to Low" />
         </RadioGroup>
@@ -121,7 +122,7 @@ function RadioButtonsGroup() {
     );
 }
 
-function MinimumDistanceSlider() {
+function MinimumDistanceSlider({ setPriceRange }) {
 
     function valuetext(value) {
         return `$${value}`;
@@ -131,15 +132,19 @@ function MinimumDistanceSlider() {
 
     const [value1, setValue1] = React.useState([0, 20000]);
 
+    useEffect(() => {
+        setPriceRange(`${value1[0]}:${value1[1]}`);
+    }, [value1]);
+
     const handleChange = (event, newValue, activeThumb) => {
         if (!Array.isArray(newValue)) {
-        return;
+            return;
         }
 
         if (activeThumb === 0) {
-        setValue1([Math.min(newValue[0], value1[1] - minDistance), value1[1]]);
+            setValue1([Math.min(newValue[0], value1[1] - minDistance), value1[1]]);
         } else {
-        setValue1([value1[0], Math.max(newValue[1], value1[0] + minDistance)]);
+            setValue1([value1[0], Math.max(newValue[1], value1[0] + minDistance)]);
         }
     };
 

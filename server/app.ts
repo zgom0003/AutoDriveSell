@@ -1,12 +1,18 @@
 import express, { Express } from "express";
+import catalogRouter from "./routes/catalog";
+import cors from "cors";
+
 const app: Express = express();
 const port = 3000;
 
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true,
+}));
+app.use(express.json());
+
+app.use(catalogRouter);
 app.use(express.static("dist"));
-
-import cors from "cors";
-
-app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 
 app.get("/", (_, res) => {
   res.send("Hello world");
