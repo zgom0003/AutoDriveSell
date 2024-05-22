@@ -5,17 +5,19 @@ import cookieParser from "cookie-parser";
 import passport from "passport";
 import "./passport";
 import session from "express-session";
+import catalog from './routes/catalog';
 
 import authRouter, { loggedIn } from "./routes/auth";
 
-require("dotenv").config();
+import dotenv from "dotenv";
+dotenv.config();
 
 const app = express();
 const PORT = 3000;
 
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
-var cors = require("cors");
+import cors from "cors";
 
 // use it before all route definitions
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
@@ -41,6 +43,7 @@ app.use(passport.session());
 app.use(express.static("dist"));
 
 app.use("/auth", authRouter);
+app.use(catalog);
 
 app.get("/", (req, res) => {
   console.log(req.user);
