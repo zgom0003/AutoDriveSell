@@ -7,31 +7,47 @@ router.get('/api/catalog', (req, res) => {
 
     const { itemCount, rating, sortBy, priceRange } = req.query;
 
-    console.log(itemCount, rating, sortBy, priceRange);
-
-    // Adjust item count
-    if (itemCount > products.length) {
-        const newItems = itemCount - products.length;
-        products.push(...getNewProducts(newItems, products.length));
+    try {
+        // Adjust item count
+        addItems(itemCount, products);
+    } catch (error) {
+        return res.status(500).json({ message: 'Error adding new getting new products', error: error.message })
     }
 
+    // This is the modified list of items we will send back
     let sortedProducts = products;
 
-    // Adjust price filters
-    sortedProducts = priceFilters(products, sortBy, priceRange);
+    try {
+        // Adjust price filters
+        sortedProducts = priceFilters(products, sortBy, priceRange);
+    } catch (error) {
+        return res.status(500).json({ message: 'Error applying price filter to product list', error: error.message })
+    }
 
-    // Adjust rating filters
-    sortedProducts = ratingFilters(sortedProducts, Number(rating));
+    try {
+        // Adjust rating filters
+        sortedProducts = ratingFilters(sortedProducts, Number(rating));
+    } catch (error) {
+        return res.status(500).json({ message: 'Error applying rating filter to product list', error: error.message })
+    }
 
     res.status(200).json({ products: sortedProducts });
 });
 
-const ratingFilters = (products, ratingFilter) => {
+const addItems = (itemCount, products) => {
 
-    if (!ratingFilter) return products;
+    if (itemCount > products.length) {
+        const newItems = itemCount - products.length;
+        products.push(...getNewProducts(newItems, products.length));
+    }
+}
 
-    const minRating = ratingFilter;
-    const maxRating = ratingFilter + 0.9;
+const ratingFilters = (products, rating) => {
+
+    if (!rating) return products;
+
+    const minRating = rating;
+    const maxRating = rating + 0.9;
     return products.filter(product => (product.rating >= minRating) && (product.rating <= maxRating));
 
 };
@@ -69,3 +85,7 @@ const priceFilters = (products, sortBy, priceRange) => {
 }
 
 export default router;
+
+export {
+    addItems, ratingFilters, priceFilters
+}
