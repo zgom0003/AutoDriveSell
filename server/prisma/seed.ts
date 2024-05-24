@@ -71,14 +71,6 @@ async function main() {
           ],
         },
       },
-      reviews: {
-        createMany: {
-          data: [
-            { rating: 4.5, description: "Very good. No complaints." },
-            { rating: 2.5, description: "Terrible. Would not recommend." },
-          ],
-        },
-      },
     },
   });
   console.log("Inserted sample products");
