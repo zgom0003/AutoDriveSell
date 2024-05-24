@@ -2,8 +2,7 @@
     border-top: 1px;
     border-style: solid;
     border-color: lightgray;
-    width: 50%;
-    min-width: 650px;
+    width: 90%;
 }
 
 .bill {
@@ -13,10 +12,10 @@
     align-items: center;
     justify-content: center;
 
-    height: 200px;
-    width: 500px;
-    margin: 30px;
-    background-color: lightgray;
+    height: 100px;
+    width: 400px;
+    padding: 20px;
+    margin: 20px;
 
     border: 1px solid rgba(128, 128, 128, 0.199);
     border-radius: 5px;
@@ -31,6 +30,11 @@
     display: flex;
     width: 100%;
     justify-content: center;
+    padding-top: 40px;
+}
+
+.rating-text {
+    margin-left: 0;
 }
 
 @media (width < 1000px) {
