@@ -7,6 +7,7 @@ import "./passport";
 import session from "express-session";
 
 import authRouter, { loggedIn } from "./routes/auth";
+import catalogRouter from "./routes/catalog";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -39,10 +40,6 @@ app.use(passport.authenticate("session"));
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(cors({
-  origin: 'http://localhost:5173',
-  credentials: true,
-}));
 app.use(express.json());
 
 app.use(catalogRouter);
