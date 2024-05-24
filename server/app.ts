@@ -5,7 +5,6 @@ import cookieParser from "cookie-parser";
 import passport from "passport";
 import "./passport";
 import session from "express-session";
-import catalog from './routes/catalog';
 
 import authRouter, { loggedIn } from "./routes/auth";
 
@@ -43,7 +42,6 @@ app.use(passport.session());
 app.use(express.static("dist"));
 
 app.use("/auth", authRouter);
-app.use(catalog);
 
 app.get("/", (req, res) => {
   console.log(req.user);
