@@ -1,0 +1,42 @@
+.b-divider {
+    border-top: 1px;
+    border-style: solid;
+    border-color: lightgray;
+    width: 50%;
+    min-width: 650px;
+}
+
+.bill {
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    height: 200px;
+    width: 500px;
+    margin: 30px;
+    background-color: lightgray;
+
+    border: 1px solid rgba(128, 128, 128, 0.199);
+    border-radius: 5px;
+
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.mainBox {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+@media (width < 1000px) {
+    .mainBox {
+        flex-direction: column;
+        align-items: center;
+    }
+
+}

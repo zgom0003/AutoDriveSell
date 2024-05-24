@@ -3,6 +3,7 @@ import Listing from "../../components/Listing/Listing";
 import { ListingInfo } from "../../types/listing";
 import "./Home.css";
 import Button from "@mui/material/Button";
+import { useEffect } from "react";
 
 const imgSrc =
   "https://images.drive.com.au/driveau/image/upload/c_fill,f_auto,g_auto,h_1080,q_auto:eco,w_1920/v1/cms/uploads/jmnrqauksfaore9gv7bn";

@@ -1,0 +1,61 @@
+.b-container {
+    display: flex;
+    flex-direction: row;
+
+    /* width: 400px; */
+    overflow: hidden;
+    line-height: 1.2em;
+    cursor: pointer;
+    color: black;
+
+    margin: 15px 0px;
+
+    min-width: 650px;
+    width: 50%;
+}
+
+.b-container:hover {
+    color: black;
+}
+
+.b-title {
+    margin-top: 8px;
+    font-size: 18px;
+}
+
+.b-image {
+    object-fit: cover;
+    border-radius: 6px;
+    margin-right: 20px;
+    max-width: 300px;
+}
+
+.b-price {
+    color: rgb(0, 0, 0);
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.col {
+    display: flex;
+    flex-direction: column;
+}
+
+.row { 
+    display: flex;
+    flex-direction: row;
+
+}
+
+.space-between {
+    display: flex;
+    justify-content: space-between;
+}
+
+.left > * > * {
+    margin-bottom: 8px;
+}
+
+.w_100 {
+    width: 100%;
+}

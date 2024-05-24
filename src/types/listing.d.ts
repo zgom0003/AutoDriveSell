@@ -4,4 +4,7 @@ export interface ListingInfo {
   price: number;
   rating?: number;
   productLink: string;
+  description?: string;
+  creator?:string;
+  vehicleType?:string;
 }
