@@ -3,17 +3,22 @@ import Listing from "../../components/Listing/Listing";
 import { ListingInfo } from "../../types/listing";
 import "./Home.css";
 import Button from "@mui/material/Button";
-import { useEffect } from "react";
-
-const imgSrc =
-  "https://images.drive.com.au/driveau/image/upload/c_fill,f_auto,g_auto,h_1080,q_auto:eco,w_1920/v1/cms/uploads/jmnrqauksfaore9gv7bn";
-const popularListings: ListingInfo[] = [
-  { imgSrc: imgSrc, title: "Product 1", price: 15000, rating: 4.3, productLink: "item1" },
-  { imgSrc: imgSrc, title: "Product 2", price: 9000, rating: 5.0, productLink: "item2" },
-  { imgSrc: imgSrc, title: "Product 3", price: 14000, rating: 5.0, productLink: "item3" },
-];
+import { useEffect, useState } from "react";
+import { CatalogRetrieve } from "../../types/catalog-retrieve";
 
 export default function HomePage() {
+  const [products, setProducts] = useState<CatalogRetrieve[]>([]);
+
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_REACT_APP_SERVER_URL}/api/catalog/popular?count=3`)
+      .then((res) => res.json())
+      .then((data) => {
+        setProducts(data);
+        console.log(data);
+        return;
+      });
+  }, []);
+
   return (
     <>
       <div className="banner-container">
@@ -35,7 +40,7 @@ export default function HomePage() {
       <div className="products-container">
         <p className="popular-picks">POPULAR PICKS</p>
         <div className="listing-grid">
-          {popularListings.map((listing, i) => (
+          {products.map((listing, i) => (
             <Listing {...listing} key={i} />
           ))}
         </div>

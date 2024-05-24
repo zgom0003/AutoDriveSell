@@ -1,12 +1,14 @@
 .rating__container {
   display: flex;
   align-items: center;
+  justify-content: start;
   gap: 4px;
   font-size: 14px;
 }
 
 .rating-text {
   color: rgb(102, 102, 102);
+  margin-left: 0px;
 }
 
 .rating-stars {

@@ -21,9 +21,13 @@ async function main() {
     data: {
       name: "Product One",
       description: "Product one description",
-      imageUrl:
-        "https://images.drive.com.au/driveau/image/upload/c_fill,f_auto,g_auto,h_1080,q_auto:eco,w_1920/v1/cms/uploads/jmnrqauksfaore9gv7bn",
-      ProductOption: {
+      images: {
+        create: {
+          imageUrl:
+            "https://images.drive.com.au/driveau/image/upload/c_fill,f_auto,g_auto,h_1080,q_auto:eco,w_1920/v1/cms/uploads/jmnrqauksfaore9gv7bn",
+        },
+      },
+      productOptions: {
         create: {
           name: "Option 1",
           price: 120,
@@ -36,9 +40,30 @@ async function main() {
     data: {
       name: "Product Two",
       description: "Product two description",
-      imageUrl:
-        "https://images.drive.com.au/driveau/image/upload/c_fill,f_auto,g_auto,h_1080,q_auto:eco,w_1920/v1/cms/uploads/jmnrqauksfaore9gv7bn",
-      ProductOption: {
+      images: {
+        createMany: {
+          data: [
+            {
+              imageUrl:
+                "https://images.drive.com.au/driveau/image/upload/c_fill,f_auto,g_auto,h_1080,q_auto:eco,w_1920/v1/cms/uploads/jmnrqauksfaore9gv7bn",
+            },
+            {
+              imageUrl:
+                "https://images.unsplash.com/photo-1533106418989-88406c7cc8ca?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            },
+            {
+              imageUrl:
+                "https://images.unsplash.com/photo-1617650728468-8581e439c864?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            },
+            {
+              imageUrl:
+                "https://images.unsplash.com/photo-1617531653520-4893f7bbf978?q=80&w=2020&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            },
+          ],
+        },
+      },
+
+      productOptions: {
         createMany: {
           data: [
             { name: "Option One", price: 70 },
@@ -46,8 +71,17 @@ async function main() {
           ],
         },
       },
+      reviews: {
+        createMany: {
+          data: [
+            { rating: 4.5, description: "Very good. No complaints." },
+            { rating: 2.5, description: "Terrible. Would not recommend." },
+          ],
+        },
+      },
     },
   });
+  console.log("Inserted sample products");
 }
 main()
   .then(async () => {

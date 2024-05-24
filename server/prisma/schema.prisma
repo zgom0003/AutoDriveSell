@@ -8,17 +8,19 @@ datasource db {
 }
 
 model Product {
-  id            Int             @id @default(autoincrement())
-  name          String          @db.Text
-  description   String?         @db.Text
-  Rating        Review[]
-  ProductOption ProductOption[]
-  imageUrl      String          @db.Text
+  id             Int             @id @default(autoincrement())
+  name           String          @db.Text
+  description    String?         @db.Text
+  reviews        Review[]
+  productOptions ProductOption[]
+  images         ProductImage[]
 }
 
-model Admin {
-  id    Int    @id @default(autoincrement())
-  email String @unique
+model ProductImage {
+  id        Int     @id @default(autoincrement())
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int
+  imageUrl  String  @db.Text
 }
 
 model ProductOption {
@@ -34,7 +36,12 @@ model Review {
   product    Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId  Int
   rating     Float
-  desciption String? @db.Text
+  description String? @db.Text
+}
+
+model Admin {
+  id    Int    @id @default(autoincrement())
+  email String @unique
 }
 
 model Session {

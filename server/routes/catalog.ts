@@ -1,91 +1,105 @@
 import express from "express";
-import { products, getNewProducts } from "./products"
+import prisma from "../prisma/prismaClient";
+import { Product, ProductImage, ProductOption, Review } from "@prisma/client";
 
 const router = express.Router();
 
-router.get('/api/catalog', (req, res) => {
+type SortByOptions = "priceHighLow" | "priceLowHigh" | undefined;
 
-    const { itemCount, rating, sortBy, priceRange } = req.query;
+type RetrieveItem = Product & { productOptions: ProductOption[]; reviews: Review[]; images: ProductImage[] };
 
-    try {
-        // Adjust item count
-        addItems(itemCount, products);
-    } catch (error) {
-        return res.status(500).json({ message: 'Error adding new getting new products', error: error.message })
-    }
+router.get("/api/catalog/popular", async (req, res) => {
+  // TODO: Return most popular items based on purchase count.
+  const count = req.query.count as string;
 
-    // This is the modified list of items we will send back
-    let sortedProducts = products;
+  if (!parseInt(count)) return res.status(404).json({ message: "Invalid item count." });
+  const products = await prisma.product.findMany({
+    include: { productOptions: true, reviews: true, images: { take: parseInt(count) } },
+  });
 
-    try {
-        // Adjust price filters
-        sortedProducts = priceFilters(products, sortBy, priceRange);
-    } catch (error) {
-        return res.status(500).json({ message: 'Error applying price filter to product list', error: error.message })
-    }
-
-    try {
-        // Adjust rating filters
-        sortedProducts = ratingFilters(sortedProducts, Number(rating));
-    } catch (error) {
-        return res.status(500).json({ message: 'Error applying rating filter to product list', error: error.message })
-    }
-
-    res.status(200).json({ products: sortedProducts });
+  res.status(200).json(products);
 });
 
-const addItems = (itemCount, products) => {
+router.get("/api/catalog", async (req, res) => {
+  const { rating, sortBy, priceRange } = req.query;
 
-    if (itemCount > products.length) {
-        const newItems = itemCount - products.length;
-        products.push(...getNewProducts(newItems, products.length));
-    }
-}
+  const [minPrice, maxPrice] =
+    priceRange === undefined
+      ? [undefined, undefined]
+      : (priceRange as string).split(":").map((value) => parseInt(value));
 
-const ratingFilters = (products, rating) => {
+  let products: RetrieveItem[] = await prisma.product.findMany({
+    include: { productOptions: true, reviews: true, images: { take: 1 } },
+  });
 
-    if (!rating) return products;
+  products = ratingFilters(products, parseInt(rating as string));
 
-    const minRating = rating;
-    const maxRating = rating + 0.9;
-    return products.filter(product => (product.rating >= minRating) && (product.rating <= maxRating));
+  products = priceFilters(products, minPrice, maxPrice);
 
+  products = sortProducts(products, sortBy as SortByOptions);
+
+  res.status(200).json(products);
+});
+
+router.get("/api/catalog/:id", async (req, res) => {
+  const itemId = parseInt(req.params.id);
+
+  if (!itemId) return res.status(404).json({ message: "Invalid product id." });
+
+  const product = await prisma.product.findFirst({
+    where: { id: itemId },
+    include: { productOptions: true, reviews: true, images: true },
+  });
+
+  if (!product) return res.status(404).json({ message: "Product id not found." });
+
+  return res.status(200).json(product);
+});
+
+const ratingFilters = (products: RetrieveItem[], rating: number) => {
+  const getAvgRating = (reviews: Review[]) => {
+    if (reviews.length === 0) return 5;
+    const sum = reviews.reduce((prev, cur) => prev + cur.rating, 0);
+    return sum / reviews.length;
+  };
+
+  if (!rating) return products;
+
+  return products.filter((product) => Math.round(getAvgRating(product.reviews)) == rating);
 };
 
-const priceFilters = (products, sortBy, priceRange) => {
+const priceFilters = (products: RetrieveItem[], minPrice?: number, maxPrice?: number) => {
+  if (minPrice === undefined || maxPrice === undefined) return products;
+  return products.filter((product) => {
+    const cheapestOption = getProductCheapestOption(product);
+    return cheapestOption.price >= minPrice && cheapestOption.price <= maxPrice;
+  });
+};
 
-    const sortByPriceAscending = (products) => {
-        return products.slice().sort((a, b) => a.price - b.price);
-    };
+const sortProducts = (products: RetrieveItem[], sortBy?: SortByOptions) => {
+  const sortByPriceAscending = (products: RetrieveItem[]) => {
+    return products.sort((a, b) => getProductCheapestOption(a).price - getProductCheapestOption(b).price);
+  };
 
-    const sortByPriceDescending = (products) => {
-        return products.slice().sort((a, b) => b.price - a.price);
-    };
+  const sortByPriceDescending = (products: RetrieveItem[]) => {
+    return products.slice().sort((a, b) => getProductCheapestOption(b).price - getProductCheapestOption(a).price);
+  };
 
-    const filterByPriceRange = (products, minPrice, maxPrice) => {
-        return products.filter(product => product.price >= minPrice && product.price <= maxPrice);
-    };
+  if (!sortBy) return products;
 
-    let sortedProd = [];
+  switch (sortBy) {
+    case "priceHighLow":
+      return sortByPriceDescending(products);
+    case "priceLowHigh":
+      return sortByPriceAscending(products);
+  }
+};
 
-    if (sortBy == 'low')
-        sortedProd = sortByPriceAscending(products);
-    else if (sortBy == 'high')
-        sortedProd = sortByPriceDescending(products);
-    else
-        sortedProd = products;
-    
-    if (priceRange) {
-        const minPrice = Number(priceRange.split(':')[0]);
-        const maxPrice = Number(priceRange.split(':').pop());
-        sortedProd = filterByPriceRange(sortedProd, minPrice, maxPrice);
-    }
-
-    return sortedProd;
-}
+const getProductCheapestOption = (product: RetrieveItem) => {
+  return product.productOptions.reduce(
+    (prev, option) => (option.price < prev.price ? option : prev),
+    product.productOptions?.[0]
+  );
+};
 
 export default router;
-
-export {
-    addItems, ratingFilters, priceFilters
-}
