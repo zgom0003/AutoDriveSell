@@ -14,15 +14,15 @@ model Product {
   reviews        Review[]
   productOptions ProductOption[]
   images         ProductImage[]
-  category ProdCategory[]
-  carts Cart[]
-  orders Order[]
+  category       ProdCategory[]
+  carts          Cart[]
+  orders         Order[]
 }
 
 model ProdCategory {
-  id   Int       @id @default(autoincrement())
-  name String
-  products  Product[]
+  id       Int       @id @default(autoincrement())
+  name     String
+  products Product[]
 }
 
 model ProductImage {
@@ -41,56 +41,57 @@ model ProductOption {
 }
 
 model Review {
-  id         Int     @id @default(autoincrement())
-  product    Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId  Int
-  customerId Int
-  customer Customer @relation(fields: [customerId], references: [id])
-  rating     Float
-  description String? @db.Text
+  id          Int      @id @default(autoincrement())
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId   Int
+  customerId  Int
+  customer    Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  rating      Float
+  description String?  @db.Text
 }
 
-model Admin {
-  id    Int    @id @default(autoincrement())
-  email String @unique
-  desciption String? @db.Text
+model User {
+  id        Int       @id @default(autoincrement())
   createdAt DateTime  @default(now())
+  email     String    @unique
+  isAdmin   Boolean   @default(false)
+  customer  Customer?
+}
+
+model Customer {
+  id          Int      @id
+  user        User     @relation(fields: [id], references: [id], onDelete: Cascade)
+  firstName   String
+  lastName    String
+  address     String
+  phoneNumber String?
+  carts       Cart[]
+  orders      Order[]
+  reviews     Review[]
 }
 
 model Session {
   id        String   @id
   sid       String   @unique
-  data      String
+  data      String   @db.Text
   expiresAt DateTime
 }
 
-model Customer {
-  id Int @id @default(autoincrement())
-  firstName String
-  lastName String
-  address String
-  email String
-  phoneNumber String?
-  carts Cart[]
-  orders Order[]
-  reviews Review[]
-}
-
 model Order {
-  id Int @id
-  customer Customer @relation(fields: [customerId], references: [id])
-  customerId Int @unique
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id          Int       @id
+  customer    Customer  @relation(fields: [customerId], references: [id])
+  customerId  Int       @unique
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
   totalAmount Float
-  products Product[]
+  products    Product[]
 }
 
 model Cart {
-  id       Int        @id @default(autoincrement())
-  customerId   Int
-  customer     Customer       @relation(fields: [customerId], references: [id])
-  products    Product[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id         Int       @id @default(autoincrement())
+  customerId Int
+  customer   Customer  @relation(fields: [customerId], references: [id])
+  products   Product[]
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 }

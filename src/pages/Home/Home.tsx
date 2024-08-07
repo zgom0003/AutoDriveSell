@@ -5,6 +5,7 @@ import "./Home.css";
 import Button from "@mui/material/Button";
 import { useEffect, useState } from "react";
 import { CatalogRetrieve } from "../../types/catalog-retrieve";
+import { getUser } from "../../helpers/useUser";
 
 export default function HomePage() {
   const [products, setProducts] = useState<CatalogRetrieve[]>([]);
@@ -14,8 +15,6 @@ export default function HomePage() {
       .then((res) => res.json())
       .then((data) => {
         setProducts(data);
-        console.log(data);
-        return;
       });
   }, []);
 

@@ -13,6 +13,7 @@ import LoginFailurePage from "./pages/LoginFailure/LoginFailure";
 import Catalogue from "./pages/Catalogue/Catalogue";
 import Basket from "./pages/Basket/Basket";
 import ProductItemPage from './pages/Product-Item-Page/Product-Item.tsx';
+import CustomerProfile from "./pages/Profile/Profile.tsx";
 
 function App() {
   return (
@@ -26,6 +27,8 @@ function App() {
             <Route path="products" element={<Catalogue />} />
             <Route path="products/:itemId" element={<ProductItemPage />} />
             <Route path="basket" element={<Basket />} />
+            <Route path="profile" element={<CustomerProfile />} />
+
           </Route>
         </Routes>
       </BrowserRouter>

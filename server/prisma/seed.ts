@@ -6,11 +6,12 @@ async function main() {
   const adminEmails = ["ayee0007@student.monash.edu"];
 
   adminEmails.forEach(async (email) => {
-    await prisma.admin.upsert({
+    await prisma.user.upsert({
       where: { email },
       update: {},
       create: {
         email,
+        isAdmin: true,
       },
     });
   });

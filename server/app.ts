@@ -48,7 +48,6 @@ app.use(express.static("dist"));
 app.use("/auth", authRouter);
 
 app.get("/", (req, res) => {
-  console.log(req.user);
   res.send("AutoDriveSell server is up and running!");
 });
 

@@ -1,7 +1,7 @@
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import prisma from "./prisma/prismaClient";
-import { Admin } from "@prisma/client";
+import { User } from "@prisma/client";
 
 passport.use(
   new GoogleStrategy(
@@ -14,8 +14,18 @@ passport.use(
     async function (accessToken, refreshToken, profile, done) {
       if (!profile?._json?.email) return done(null, null);
 
-      const foundAdmin = await prisma.admin.findFirst({ where: { email: profile?._json?.email } });
-      return done(null, foundAdmin);
+      const email: string = profile?._json?.email;
+      const firstName: string = profile.name.givenName;
+      const lastName: string = profile.name.familyName;
+
+      const user = await prisma.user.upsert({
+        where: { email: email },
+        create: { email: email },
+        update: {
+          customer: { upsert: { create: { firstName, lastName, address: "" }, update: {} } },
+        },
+      });
+      return done(null, user);
     }
   )
 );
@@ -24,6 +34,6 @@ passport.serializeUser((user, done) => {
   done(null, user);
 });
 
-passport.deserializeUser((id: Admin, done) => {
+passport.deserializeUser((id: User, done) => {
   done(null, id);
 });

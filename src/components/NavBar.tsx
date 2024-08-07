@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, redirect, useNavigate } from "react-router-dom";
 import * as React from "react";
 import { styled, alpha } from "@mui/material/styles";
 import Badge from "@mui/material/Badge";
@@ -20,29 +20,29 @@ import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import { useEffect, useState } from "react";
+import useUser from "../helpers/useUser";
+import { Dashboard } from "@mui/icons-material";
 
-const pages = ['home', 'products', 'contact us'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const pages = ["home", "products", "contact us"];
+const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function NavBar() {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
-  const [loggedIn, setLoggedIn] = useState<boolean>(false);
+  // const [loggedIn, setLoggedIn] = useState<boolean>(false);
+  const user = useUser();
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    fetch(`${import.meta.env.VITE_REACT_APP_SERVER_URL}/auth/status`, { credentials: "include", mode: "cors" })
-      .then((res) => res.json())
-      .then((data) => {
-        setLoggedIn(data.loggedIn);
-      });
-  }, []);
+  // useEffect(() => {
+  //   fetch(`${import.meta.env.VITE_REACT_APP_SERVER_URL}/auth/status`, { credentials: "include", mode: "cors" })
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       setLoggedIn(data.loggedIn);
+  //     });
+  // }, []);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    // setAnchorElUser(event.currentTarget);
-    window.open("http://localhost:3000/auth/google", "_self");
   };
 
   const handleCloseNavMenu = () => {
@@ -108,7 +108,7 @@ function NavBar() {
             variant="h6"
             noWrap
             component="a"
-            href="Home"
+            href="/"
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
@@ -166,7 +166,7 @@ function NavBar() {
             variant="h5"
             noWrap
             component="a"
-            href="Home"
+            href="/"
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
@@ -184,9 +184,9 @@ function NavBar() {
             {pages.map((page) => (
               <Button
                 key={page}
-                href={page}
+                href={page === "home" ? "/" : page}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                sx={{ my: 2, color: "white", display: "block" }}
               >
                 {page}
               </Button>
@@ -200,10 +200,41 @@ function NavBar() {
             <StyledInputBase placeholder="Search…" inputProps={{ "aria-label": "search" }} />
           </Search>
           <Box sx={{ flexGrow: 0, pl: 3, pr: 3 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar>{loggedIn ? <AdminPanelSettingsIcon /> : <PersonIcon />}</Avatar>
+            <IconButton aria-label="cart" component={Link} to="/basket">
+              <Badge badgeContent={4} color="secondary">
+                <ShoppingCartIcon />
+              </Badge>
+            </IconButton>
+          </Box>
+          {user?.isAdmin && (
+            <Box sx={{ flexGrow: 0, pl: 0, pr: 3 }}>
+              <IconButton aria-label="admin" component={Link} to="/admin">
+                <Dashboard />
               </IconButton>
+            </Box>
+          )}
+          <Box>
+            <Tooltip title="User">
+              {user ? (
+                user.isAdmin ? (
+                  <IconButton onClick={() => navigate("/profile")} sx={{ p: 0 }}>
+                    <Avatar>{<AdminPanelSettingsIcon />}</Avatar>
+                  </IconButton>
+                ) : (
+                  <IconButton onClick={() => navigate("/profile")} sx={{ p: 0 }}>
+                    <Avatar>{<PersonIcon />}</Avatar>
+                  </IconButton>
+                )
+              ) : (
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  size="large"
+                  onClick={() => window.open(`${import.meta.env.VITE_REACT_APP_SERVER_URL}/auth/google`, "_self")}
+                >
+                  Log in
+                </Button>
+              )}
             </Tooltip>
             <Menu
               sx={{ mt: "45px" }}
@@ -227,13 +258,6 @@ function NavBar() {
                 </MenuItem>
               ))}
             </Menu>
-          </Box>
-          <Box>
-            <IconButton aria-label="cart" component={Link} to="/basket">
-              <Badge badgeContent={4} color="secondary">
-                <ShoppingCartIcon />
-              </Badge>
-            </IconButton>
           </Box>
         </Toolbar>
       </Container>
