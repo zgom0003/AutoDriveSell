@@ -1,4 +1,4 @@
-import { Link, redirect, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import * as React from "react";
 import { styled, alpha } from "@mui/material/styles";
 import Badge from "@mui/material/Badge";
@@ -19,7 +19,7 @@ import MenuItem from "@mui/material/MenuItem";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useUser from "../helpers/useUser";
 import { Dashboard } from "@mui/icons-material";
 

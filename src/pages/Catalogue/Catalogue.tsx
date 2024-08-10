@@ -10,7 +10,7 @@ import Button from '@mui/material/Button';
 import Listing from "../../components/Listing/Listing";
 import Rating from "../../components/Rating/Rating";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 import "./Catalogue.css";
 import { CatalogRetrieve } from "../../types/catalog-retrieve";
@@ -203,7 +203,7 @@ function MinimumDistanceSlider(props: { setPriceRange: (priceRange: string) => v
 
   useEffect(() => {
     props.setPriceRange(`${value1[0]}:${value1[1]}`);
-  }, [value1]);
+  }, [value1, props]);
 
   const handleChange = (_: Event, newValue: number | number[], activeThumb: number) => {
     if (!Array.isArray(newValue)) {

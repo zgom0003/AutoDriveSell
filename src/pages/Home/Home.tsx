@@ -1,11 +1,9 @@
 import { Link } from "react-router-dom";
 import Listing from "../../components/Listing/Listing";
-import { ListingInfo } from "../../types/listing";
 import "./Home.css";
 import Button from "@mui/material/Button";
 import { useEffect, useState } from "react";
 import { CatalogRetrieve } from "../../types/catalog-retrieve";
-import { getUser } from "../../helpers/useUser";
 
 export default function HomePage() {
   const [products, setProducts] = useState<CatalogRetrieve[]>([]);

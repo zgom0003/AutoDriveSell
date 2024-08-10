@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
 import { ListingInfo } from "../../types/listing";
-import Listing from "../../components/Listing/Listing";
 
 import './Basket.css';
 import BasketListing from "../../components/Listing/BasketListing";
-import Button from "@mui/material/Button/Button";
 
-const KEY = 'basket';
+//const KEY = 'basket';
 
 export default function Basket() {
 
@@ -64,13 +62,16 @@ export default function Basket() {
     );
 }
 
+//@ts-expect-error Sort this out later, not sure what type of obj items is
 function Items( {items} ) {
+
+    /*
 
     const readLS = () => {
         const data = localStorage.getItem(KEY);
         return data ? JSON.parse(data): [];
     }
-
+    
     const addLS = (value) => {
         const existingData = readLS();
         existingData.push(value);
@@ -82,11 +83,13 @@ function Items( {items} ) {
         const updateData = existingData.filter(item => item != value);
         localStorage.setItem(KEY, updateData);
     }
+    
 
     // Delete items
     const handleDelete = (index: number) => {
         return index;
     }
+    */
 
     return (
         <div style={{
