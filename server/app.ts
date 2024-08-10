@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import passport from "passport";
 import "./passport";
 import session from "express-session";
+import path from 'path';
 
 import authRouter, { loggedIn } from "./routes/auth";
 import catalogRouter from "./routes/catalog";
@@ -43,7 +44,17 @@ app.use(passport.session());
 app.use(express.json());
 
 app.use(catalogRouter);
-app.use(express.static("dist"));
+
+import { fileURLToPath } from 'url';
+
+const frontendDir = '../dist';
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+app.use(express.static(path.join(__dirname, frontendDir)));
+app.use('/assets', express.static(path.join(__dirname, frontendDir, 'assets')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, frontendDir, 'index.html'));
+});
 
 app.use("/auth", authRouter);
 
