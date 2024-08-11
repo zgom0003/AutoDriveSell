@@ -47,14 +47,6 @@ app.use(catalogRouter);
 
 import { fileURLToPath } from 'url';
 
-const frontendDir = '../dist';
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
-app.use(express.static(path.join(__dirname, frontendDir)));
-app.use('/assets', express.static(path.join(__dirname, frontendDir, 'assets')));
-
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, frontendDir, 'index.html'));
-});
 
 app.use("/auth", authRouter);
 
@@ -64,6 +56,16 @@ app.get("/", (req, res) => {
 
 app.get("/protected", loggedIn, (req, res, next) => {
   res.json({ data: "protected data" });
+});
+
+
+const frontendDir = "../dist";
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+app.use(express.static(path.join(__dirname, frontendDir)));
+app.use("/assets", express.static(path.join(__dirname, frontendDir, "assets")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, frontendDir, "index.html"));
 });
 
 app.listen(PORT, () => {
