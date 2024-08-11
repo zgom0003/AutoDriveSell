@@ -30,7 +30,7 @@ function NavBar() {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   // const [loggedIn, setLoggedIn] = useState<boolean>(false);
-  const user = useUser();
+  const { user } = useUser();
   const navigate = useNavigate();
 
   // useEffect(() => {

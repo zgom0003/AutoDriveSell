@@ -2,12 +2,15 @@ import { useNavigate } from "react-router-dom";
 import "./Profile.css";
 import { Button, Checkbox, FormControlLabel, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
+import useUser from "../../helpers/useUser";
 
 export default function ProfilePage() {
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [valuesChanged, setValuesChanged] = useState<boolean>(false);
+  const { user, updateUser } = useUser();
 
   const navigate = useNavigate();
   function signOut() {
@@ -21,54 +24,53 @@ export default function ProfilePage() {
     });
   }
 
-  useEffect(() => {
-    fetch(`${import.meta.env.VITE_REACT_APP_SERVER_URL}/auth/user`, { credentials: "include", mode: "cors" })
-      .then((res) => res.json())
-      .then((data) => {
-        //   {
-        //     "id": 2,
-        //     "createdAt": "2024-07-30T09:15:50.489Z",
-        //     "email": "a2d0a0m2@gmail.com",
-        //     "isAdmin": false,
-        //     "customer": {
-        //         "id": 2,
-        //         "firstName": "Adam",
-        //         "lastName": "Ye",
-        //         "address": "",
-        //         "phoneNumber": null
-        //     }
-        // }
+  function saveChanges() {
+    if (!user) return;
+    const newUser = user;
+    newUser.customer.firstName = firstName;
+    newUser.customer.lastName = lastName;
+    updateUser(newUser);
+  }
 
-        setEmail(data.email);
-        setFirstName(data.customer.firstName);
-        setLastName(data.customer.lastName);
-        console.log(data.isAdmin);
-        setIsAdmin(data.isAdmin);
-      });
-  }, []);
+  useEffect(() => {
+    if (!user) return;
+
+    setEmail(user.email);
+    setFirstName(user.customer.firstName);
+    setLastName(user.customer.lastName);
+    setIsAdmin(user.isAdmin);
+  }, [user]);
 
   return (
-    <div className="cust-prof-main">
-      <h1 className="cust-prof-heading">Your Account</h1>
-      <div className="cust-prof-form">
-        <div className="cust-prof-name">
-          <div className="cust-prof-name-field">
+    <div className="prof-main">
+      <h1 className="prof-heading">Your Account</h1>
+      <div className="prof-form">
+        <div className="prof-name">
+          <div className="prof-name-field">
             <TextField
               id="first-name"
               label="First Name"
               variant="outlined"
               fullWidth
               value={firstName}
+              onChange={(e) => {
+                setFirstName(e.target.value);
+                setValuesChanged(true);
+              }}
               InputLabelProps={{ shrink: true }}
             />
           </div>
-          <div className="cust-prof-name-field">
+          <div className="prof-name-field">
             <TextField
               id="last-name"
               label="Last Name"
               variant="outlined"
               fullWidth
               value={lastName}
+              onChange={(e) => {
+                setLastName(e.target.value);
+                setValuesChanged(true);
+              }}
               InputLabelProps={{ shrink: true }}
             />
           </div>
@@ -82,9 +84,14 @@ export default function ProfilePage() {
           disabled
         />
         <FormControlLabel control={<Checkbox id="admin" checked={isAdmin} />} label="Is Administrator" disabled />
-        <Button variant="contained" onClick={signOut} style={{ width: "150px" }}>
-          Sign Out
-        </Button>
+        <div className="prof-btn-group">
+          <Button variant="contained" onClick={saveChanges} style={{ width: "150px" }} disabled={!valuesChanged}>
+            Save Changes
+          </Button>
+          <Button variant="contained" onClick={signOut} style={{ width: "150px" }}>
+            Sign Out
+          </Button>
+        </div>
       </div>
     </div>
   );

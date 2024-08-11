@@ -8,6 +8,7 @@ import session from "express-session";
 import path from 'path';
 
 import authRouter, { loggedIn } from "./routes/auth";
+import profileRouter from "./routes/profile";
 import catalogRouter from "./routes/catalog";
 
 import dotenv from "dotenv";
@@ -45,10 +46,11 @@ app.use(express.json());
 
 app.use(catalogRouter);
 
-import { fileURLToPath } from 'url';
-
+import { fileURLToPath } from "url";
 
 app.use("/auth", authRouter);
+
+app.use("/profile", profileRouter);
 
 app.get("/", (req, res) => {
   res.send("AutoDriveSell server is up and running!");

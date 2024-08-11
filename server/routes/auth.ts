@@ -18,10 +18,6 @@ router.get("/status", (req, res) => {
   return res.json({ loggedIn: req.user !== undefined });
 });
 
-router.get("/user", loggedIn, async (req, res) => {
-  const user = await prisma.user.findFirst({ where: { id: req.user.id }, include: { customer: true } });
-  return res.json(user);
-});
 
 router.post("/logout", function (req, res, next) {
   req.logout(function (err) {

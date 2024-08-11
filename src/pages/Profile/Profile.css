@@ -1,24 +1,31 @@
-.cust-prof-main {
+.prof-main {
   margin: 32px;
 }
 
-.cust-prof-heading {
+.prof-heading {
   padding-bottom: 28px;
   font-size: xx-large;
 }
 
-.cust-prof-form {
+.prof-form {
   display: flex;
   flex-direction: column;
   max-width: 600px;
   gap: 10px;
 }
 
-.cust-prof-name {
+.prof-name {
   display: flex;
   gap: 10px;
 }
 
-.cust-prof-name-field {
+.prof-name-field {
   width: 50%;
+}
+
+.prof-btn-group {
+  display: flex;
+  justify-content: flex-end;
+  margin-top:18px;
+  gap: 10px;
 }
