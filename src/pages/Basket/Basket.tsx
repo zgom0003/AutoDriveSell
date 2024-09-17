@@ -3,60 +3,47 @@ import { ListingInfo } from "../../types/listing";
 
 import './Basket.css';
 import BasketListing from "../../components/Listing/BasketListing";
+import { Button } from "@mui/material";
+import { CatalogRetrieve } from "../../types/catalog-retrieve";
 
-//const KEY = 'basket';
+const KEY = 'basket';
 
 export default function Basket() {
 
-    const [ items, setItems ] = useState<ListingInfo[]>([]);
+    const [ items, setItems ] = useState<CatalogRetrieve[]>([]);
 
     // Read items
     useEffect(() => {
 
-        const imgSrc = "https://images.drive.com.au/driveau/image/upload/c_fill,f_auto,g_auto,h_1080,q_auto:eco,w_1920/v1/cms/uploads/jmnrqauksfaore9gv7bn";
-
-        // Getting items
-        const mockItems: ListingInfo[] = [
-            {
-                imgSrc: imgSrc,
-                title: 'item1',
-                price: 200,
-                rating: 5,
-                productLink: `item1`,
-                description: 'new item',
-                creator: 'Hyundai',
-                vehicleType: 'Sedan'
-            },
-            {
-                imgSrc: imgSrc,
-                title: 'item2',
-                price: 300,
-                rating: 4.2,
-                productLink: `item2`,
-                description: 'new item',
-                creator: 'BYD',
-                vehicleType: 'SUV'
-            },
-            {
-                imgSrc: imgSrc,
-                title: 'item3',
-                price: 400,
-                rating: 5,
-                productLink: `item3`,
-                description: 'new item',
-                creator: 'Tesla',
-                vehicleType: 'Sedan'
-            },
-        ]
+        const readLS = () => {
+            const data = localStorage.getItem(KEY);
+            return data ? JSON.parse(data): [];
+        }
 
         // Setting items
-        setItems(mockItems);
+        setItems(readLS());
 
     }, [])
 
+    console.log(items);
+
     return (
         <div className="mainBox" style={{}}>
-            <Items items={items} />
+            {items.length > 0 ? <Items items={items}/> : 
+            
+            <div style={{
+                display: "flex",
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '400px',
+                height: '180px',
+            }}
+            >
+                Your Basket is Currently Empty
+            </div>
+            }
+
             <Bill items={items} />
         </div>
     );
@@ -65,44 +52,17 @@ export default function Basket() {
 //@ts-expect-error Sort this out later, not sure what type of obj items is
 function Items( {items} ) {
 
-    /*
-
-    const readLS = () => {
-        const data = localStorage.getItem(KEY);
-        return data ? JSON.parse(data): [];
-    }
-    
-    const addLS = (value) => {
-        const existingData = readLS();
-        existingData.push(value);
-        localStorage.setItem(KEY, JSON.stringify(existingData));
-    }
-
-    const deleteLS = (value) => {
-        const existingData = readLS();
-        const updateData = existingData.filter(item => item != value);
-        localStorage.setItem(KEY, updateData);
-    }
-    
-
-    // Delete items
-    const handleDelete = (index: number) => {
-        return index;
-    }
-    */
-
     return (
         <div style={{
             display: "flex",
             flexDirection: 'column',
             alignItems: 'center',
-            background: "",
-            padding: "30px",
+            paddingBottom: "30px",
             maxWidth: '900px'
         }}
         >
             <div className="b-divider"></div>
-            {items.map((item: ListingInfo, index: number) => (
+            {items.map((item: CatalogRetrieve, index: number) => (
                 <>
                 <BasketListing {...item} key={index}/>
                 <div className="b-divider"></div>
@@ -113,11 +73,17 @@ function Items( {items} ) {
     );
 }
 
-function Bill({ items }: { items: ListingInfo[] }) {
+function Bill({ items }: { items: CatalogRetrieve[] }) {
     return (
         <>
             <div className="bill">
-                Subtotal ({items.length} items): ${items.reduce((acc, item) => acc + item.price, 0)}
+                Subtotal ({items.length} items): ${items.reduce((acc, item) => acc + item.productOptions[0].price, 0)}
+                <div className="divider" style={{maxWidth: "100%"}}></div>
+                <Button
+                    variant="contained"
+                    style={{minWidth: "80%"}}>
+                    Checkout
+                </Button>
             </div>
         </>
     )

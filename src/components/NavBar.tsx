@@ -259,6 +259,13 @@ function NavBar() {
               ))}
             </Menu>
           </Box>
+          <Box>
+            <IconButton aria-label="cart" component={Link} to="/basket">
+              <Badge badgeContent={4} color="secondary">
+                <ShoppingCartIcon />
+              </Badge>
+            </IconButton>
+          </Box>
         </Toolbar>
       </Container>
     </AppBar>

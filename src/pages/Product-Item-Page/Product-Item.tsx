@@ -62,7 +62,7 @@ export default function ProductItemPage() {
                 },
               }}
               size="large"
-              onClick={addToCart}
+              onClick={() => addToCart(productInfo)}
             >
               ADD TO CART
             </Button>
@@ -115,6 +115,23 @@ export default function ProductItemPage() {
   );
 }
 
-function addToCart() {
+function addToCart(itemListing: CatalogRetrieve) {
+
+  const KEY = 'basket';
+
+  const readLS = () => {
+      const data = localStorage.getItem(KEY);
+      return data ? JSON.parse(data): [];
+  }
+
+    const addLS = (value: any) => {
+      const existingData = readLS();
+      existingData.push(value);
+      localStorage.setItem(KEY, JSON.stringify(existingData));
+  }
+
+  addLS(itemListing)
+
   alert('Added to Cart!');
+
 }
