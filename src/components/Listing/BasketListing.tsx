@@ -5,8 +5,10 @@ import { ListingInfo } from "../../types/listing";
 import Rating from "../Rating/Rating";
 import { Link } from "react-router-dom";
 import { Button } from "@mui/material";
+import { CatalogRetrieve } from "../../types/catalog-retrieve";
+import { getAvgRating } from "./Listing";
 
-export default function BasketListing(props: ListingInfo) {
+export default function BasketListing(props: CatalogRetrieve) {
 
   const handleDelete = () => {
 
@@ -18,7 +20,7 @@ export default function BasketListing(props: ListingInfo) {
     }
 
     const existingData = readLS();
-    const updateData = existingData.filter((item: ListingInfo) => item.price != props.price);
+    const updateData = existingData.filter((item: ListingInfo) => item.price != props.productOptions[0].price);
     localStorage.setItem(KEY, updateData);
 
     window.location.reload();
@@ -27,8 +29,8 @@ export default function BasketListing(props: ListingInfo) {
   return (
     <>
       <div className="b-container" >
-        <Link to={"/products/" + props.productLink}>
-        <img src={props.imgSrc} alt="listing img" className="b-image" />
+        <Link to={"/products/" + props.id}>
+        <img src={props.images[0].imageUrl} alt="listing img" className="b-image" />
         </Link>
         
         <div className="row space-between w_100">
@@ -36,15 +38,15 @@ export default function BasketListing(props: ListingInfo) {
           <div className="col space-between" style={{maxWidth: "60%"}}>
               
               <div className="">
-                  <p className="title">{props.title}</p>
-                  {props.rating && <Rating rating={props.rating} />}
+                  <p className="title">{props.name}</p>
+                  {props.reviews.length > 0 && <Rating rating={getAvgRating(props.reviews)} />}
               </div>
 
           </div>
 
           <div className="col space-between" style={{padding: '10px'}}>
 
-              <p className="b-price">{"$" + props.price.toLocaleString()}</p>
+              <p className="b-price">{"$" + props.productOptions[0].price.toLocaleString()}</p>
               <Button variant="contained" style={{marginLeft: "-5px"}}
                 onClick={handleDelete}>
                 Delete
