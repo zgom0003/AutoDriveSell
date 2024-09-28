@@ -9,6 +9,7 @@ import path from 'path';
 
 import authRouter, { loggedIn } from "./routes/auth";
 import profileRouter from "./routes/profile";
+import adminRouter  from "./routes/adminRouter";
 import catalogRouter from "./routes/catalog";
 
 import dotenv from "dotenv";
@@ -49,7 +50,7 @@ app.use(catalogRouter);
 import { fileURLToPath } from "url";
 
 app.use("/auth", authRouter);
-
+app.use("/admin", adminRouter);
 app.use("/profile", profileRouter);
 
 app.get("/", (req, res) => {
