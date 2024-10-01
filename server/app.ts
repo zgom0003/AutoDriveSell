@@ -10,6 +10,7 @@ import path from 'path';
 import authRouter, { loggedIn } from "./routes/auth";
 import profileRouter from "./routes/profile";
 import catalogRouter from "./routes/catalog";
+import checkoutRouter from "./routes/checkout";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -51,6 +52,8 @@ import { fileURLToPath } from "url";
 app.use("/auth", authRouter);
 
 app.use("/profile", profileRouter);
+
+app.use("/checkout", checkoutRouter);
 
 app.get("/", (req, res) => {
   res.send("AutoDriveSell server is up and running!");

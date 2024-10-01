@@ -1,16 +1,23 @@
 import { useEffect, useState } from "react";
-import { ListingInfo } from "../../types/listing";
 
-import './Basket.css';
-import BasketListing from "../../components/Listing/BasketListing";
 import { Button } from "@mui/material";
-import { CatalogRetrieve } from "../../types/catalog-retrieve";
 import { useNavigate } from "react-router-dom";
+import BasketListing from "../../components/Listing/BasketListing";
+import { CatalogRetrieve } from "../../types/catalog-retrieve";
+import "./Checkout.css";
+
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import CheckoutForm from "./CheckoutForm";
+
+// Make sure to call `loadStripe` outside of a component’s render to avoid
+// recreating the `Stripe` object on every render.
+const stripePromise = loadStripe(import.meta.env.VITE_REACT_APP_STRIPE_PK);
 
 const KEY = "basket";
 
 export default function Basket() {
-  const [items, setItems] = useState<CatalogRetrieve[]>([]);
+  const [items, setItems] = useState<CatalogRetrieve[] | null>(null);
 
   // Read items
   useEffect(() => {
@@ -23,27 +30,26 @@ export default function Basket() {
     setItems(readLS());
   }, []);
 
-  console.log(items);
+  if (items === null) return null;
+  if (items.length === 0) return <h1>No items in your basket</h1>;
+
+  const paymentAmount = items.reduce((acc, item) => acc + item.productOptions[0].price, 0);
 
   return (
     <div className="mainBox" style={{}}>
-      {items.length > 0 ? (
-        <Items items={items} />
-      ) : (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            width: "400px",
-            height: "180px",
-          }}
-        >
-          Your Basket is Currently Empty
-        </div>
-      )}
-
+      <Elements
+        stripe={stripePromise}
+        options={{
+          mode: "payment",
+          amount: paymentAmount,
+          currency: "aud",
+          // More options available here: https://stripe.com/docs/js/elements_object/create_element?type=payment#elements_create_payment_element-options
+          // Fully customizable with appearance API.
+          appearance: {},
+        }}
+      >
+        <CheckoutForm checkoutItems={items} />
+      </Elements>
       <Bill items={items} />
     </div>
   );
@@ -63,10 +69,10 @@ function Items({ items }) {
     >
       <div className="b-divider"></div>
       {items.map((item: CatalogRetrieve, index: number) => (
-        <div key={index}>
-          <BasketListing {...item} />
+        <>
+          <BasketListing {...item} key={index} />
           <div className="b-divider"></div>
-        </div>
+        </>
       ))}
     </div>
   );
@@ -79,9 +85,6 @@ function Bill({ items }: { items: CatalogRetrieve[] }) {
       <div className="bill">
         Subtotal ({items.length} items): ${items.reduce((acc, item) => acc + item.productOptions[0].price, 0)}
         <div className="divider" style={{ maxWidth: "100%" }}></div>
-        <Button variant="contained" style={{ minWidth: "80%" }} onClick={() => navigate("/checkout")}>
-          Checkout
-        </Button>
       </div>
     </>
   );
