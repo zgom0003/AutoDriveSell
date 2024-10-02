@@ -10,12 +10,17 @@ import Button from '@mui/material/Button';
 import Listing from "../../components/Listing/Listing";
 import Rating from "../../components/Rating/Rating";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, createContext, useContext } from "react";
 
 import "./Catalogue.css";
 import { CatalogRetrieve } from "../../types/catalog-retrieve";
+import { Review } from '../../types/review';
+import { useFilterContext } from '../../context/FilterFormContext';
 
-type SortByOptions = "priceHighLow" | "priceLowHigh";
+const SortingOptions = {
+  PRICE_ASSENDING: 0,
+  PRICE_DECENDING: 1,
+}
 
 const getCheapestProductOption = (products: CatalogRetrieve[]): number => {
   let cheapestOption = products?.[0]?.productOptions?.[0];
@@ -26,6 +31,7 @@ const getCheapestProductOption = (products: CatalogRetrieve[]): number => {
       if (option.price < cheapestOption.price) cheapestOption = option;
     });
   });
+
   return cheapestOption.price;
 };
 
@@ -44,86 +50,164 @@ const getMostExpensiveProductOption = (products: CatalogRetrieve[]): number => {
 export default function Catalogue() {
   const [products, setProducts] = useState<CatalogRetrieve[]>([]);
 
+  // number of items to be retireved from the backend
   const [itemCount, setItemCount] = useState(10);
-  const [rating, setRating] = useState<number | null>(null);
-  const [sortBy, setSortBy] = useState<SortByOptions | null>(null);
-  const [priceRange, setPriceRange] = useState<string | null>(null);
 
   const [cheapestProduct, setCheapestProduct] = useState<number>(0);
   const [mostExpensiveProduct, setMostExpensiveProduct] = useState<number>(100000);
 
+  // On mount, make this call to the server
   useEffect(() => {
-    const urlParams = new URLSearchParams();
-    if (rating) urlParams.set("rating", rating.toString());
-    if (sortBy) urlParams.set("sortBy", sortBy.toString());
-    if (priceRange) urlParams.set("priceRange", priceRange.toString());
-    console.log(`${import.meta.env.VITE_REACT_APP_SERVER_URL}/api/catalog?${urlParams.toString()}`);
-
-    fetch(`${import.meta.env.VITE_REACT_APP_SERVER_URL}/api/catalog?${urlParams.toString()}`)
+    fetch(`${import.meta.env.VITE_REACT_APP_SERVER_URL}/api/products`)
       .then((res) => res.json())
       .then((data: CatalogRetrieve[]) => {
+        
+        console.log(data);
         setProducts(data);
-        if (rating === null && sortBy === null && priceRange === null) {
-          setCheapestProduct(getCheapestProductOption(data));
-          setMostExpensiveProduct(getMostExpensiveProductOption(data));
-        }
+
+        // Basically this just sets the slider limits based on the items
+        // returned from the database
+        setCheapestProduct(getCheapestProductOption(data));
+        setMostExpensiveProduct(getMostExpensiveProductOption(data));
       });
-  }, [itemCount, rating, sortBy, priceRange]);
+  }, [itemCount]);
 
-  const ProductDisplay = () => (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        marginBottom: "30px",
-      }}
-    >
-      <div className="catalog-grid">
-        {products.map((listing, i) => (
-          <Listing {...listing} key={i} />
-        ))}
+  const ProductDisplay = () => {
+
+    const { rating, sortBy, priceRange } = useFilterContext();
+
+    // if the any filters change apply them to the product array
+    useEffect(() => {
+
+      let sortedProducts: CatalogRetrieve[] = products;
+
+      if (rating) {
+        
+        console.log('Filtering on rating...');
+        
+        sortedProducts = sortedProducts.filter(
+
+          // Filter function
+          (a: CatalogRetrieve) => {
+
+            // Sum all the numbers in the review rating and divide by total length
+            const getAverageReviews = (reviews: Review[]): number => 
+              // The [].reduce() is used to aggegrate values into acc
+              reviews.reduce(
+                // sum function as first argument to [].reduce
+                (acc: number, currentReview: Review) => acc + currentReview.rating, 
+                // Starting aggegrate value as second argument to [].reduce
+                0
+              ) / reviews.length;  // Divide by length to get average
+
+            const aReviews = getAverageReviews(a.reviews);
+
+            // eg: rating = 4, returns products with rating 3.xx to 4
+            const upperLimit = rating;
+            const lowerLimit = rating - 1;
+            return aReviews <= upperLimit && aReviews > lowerLimit;
+          }
+
+        );
+      
+        console.log(sortedProducts);
+      }
+
+      console.log('Sorting by price...');
+
+      const getPrice = (product: CatalogRetrieve): number => {
+        console.log(product);
+        return product.productOptions[0]!.price || 0;
+      }
+
+      sortedProducts.sort(
+        (a: CatalogRetrieve, b: CatalogRetrieve) => {
+
+          // not sure how this works, the diffrence is used to sort
+          // items...
+          if (sortBy == SortingOptions.PRICE_ASSENDING)
+            return getPrice(a) - getPrice(b);
+          else if (sortBy == SortingOptions.PRICE_DECENDING)
+            return getPrice(b) - getPrice(a);
+          
+          return 0; // No change
+        }
+      );
+
+      console.log("Sorted by priec:", sortedProducts);
+
+      if (priceRange)
+        console.log('priceRange')
+
+      setProducts(sortedProducts);
+    
+    }, [rating, sortBy, priceRange]);
+    
+    return (
+      <div  
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          marginBottom: "30px",
+        }}
+      >
+        <div className="catalog-grid">
+          {products.map((listing, i) => (
+            <Listing {...listing} key={i} />
+          ))}
+        </div>
+
+        <Button variant="contained" sx={{ width: 300 }} onClick={() => setItemCount((prev) => prev + 5)}>
+          Show More
+        </Button>
       </div>
+    );
+  };
 
-      <Button variant="contained" sx={{ width: 300 }} onClick={() => setItemCount((prev) => prev + 5)}>
-        Show More
-      </Button>
-    </div>
-  );
+  const FilterForm = () => {
+
+    const { rating, setRating, setSortBy, setPriceRange } = useFilterContext();
+
+    return (
+      <div className="filter-form">
+
+          <h2>Filter By</h2>
+
+          <div className="divider"></div>
+
+          <p><b>Rating</b></p>
+          <RatingFilter setRating={setRating} rating={rating} />
+
+          <div className="divider"></div>
+
+          <p><b>Price Range</b></p>
+          <MinimumDistanceSlider setPriceRange={setPriceRange} min={cheapestProduct} max={mostExpensiveProduct} />
+
+          <div className="divider"></div>
+
+          <p><b>Sort By</b></p>
+          <RadioButtonsGroup setSortBy={setSortBy} />
+
+          <div className="divider"></div>
+
+        </div>
+    );
+  };
 
   return (
     <div className="catalog-page">
-      <div className="filter-form">
-        <h2>Filter By</h2>
-        <div className="divider"></div>
-
-        <p>
-          <b>Rating</b>
-        </p>
-        <RatingFilter setRating={setRating} rating={rating} />
-        <div className="divider"></div>
-
-        <p>
-          <b>Price Range</b>
-        </p>
-        <MinimumDistanceSlider setPriceRange={setPriceRange} min={cheapestProduct} max={mostExpensiveProduct} />
-
-        <div className="divider"></div>
-        <p>
-          <b>Sort By</b>
-        </p>
-        <RadioButtonsGroup setSortBy={setSortBy} />
-
-        <div className="divider"></div>
-      </div>
-
+      
+      <FilterForm />
       <ProductDisplay />
+    
     </div>
   );
 }
 
 function RatingFilter(props: { setRating: (rating: number | null) => void; rating: number | null }) {
+  
   const handleRatingClick = (rating: number) => {
     if (rating == props.rating) {
       props.setRating(null);
@@ -168,9 +252,11 @@ function RatingFilter(props: { setRating: (rating: number | null) => void; ratin
   );
 }
 
-function RadioButtonsGroup({ setSortBy }: { setSortBy: (sortBy: SortByOptions | null) => void }) {
+function RadioButtonsGroup({ setSortBy }: { setSortBy: (sortBy: number) => void }) {
+  
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSortBy(event.target.value as SortByOptions);
+    console.log("sortby", event.target.value);
+    setSortBy(Number(event.target.value));
   };
 
   return (
@@ -182,12 +268,12 @@ function RadioButtonsGroup({ setSortBy }: { setSortBy: (sortBy: SortByOptions | 
         onChange={handleChange}
       >
         <FormControlLabel
-          value="priceLowHigh"
+          value={SortingOptions.PRICE_ASSENDING}
           control={<Radio sx={{ color: "lightgray" }} />}
           label="Price - Low to High"
         />
         <FormControlLabel
-          value="priceHighLow"
+          value={SortingOptions.PRICE_DECENDING}
           control={<Radio sx={{ color: "lightgray" }} />}
           label="Price - High to Low"
         />

@@ -14,6 +14,7 @@ import Catalogue from "./pages/Catalogue/Catalogue";
 import Basket from "./pages/Basket/Basket";
 import ProductItemPage from './pages/Product-Item-Page/Product-Item.tsx';
 import CustomerProfile from "./pages/Profile/Profile.tsx";
+import { FilterProvider } from "./context/FilterFormContext.tsx";
 
 function App() {
   return (
@@ -24,7 +25,11 @@ function App() {
             <Route index element={<Home />} />
             <Route path="admin" element={<AdminPage />} />
             <Route path="login-failure" element={<LoginFailurePage />} />
-            <Route path="products" element={<Catalogue />} />
+            <Route path="products" element={
+              <FilterProvider>
+              <Catalogue />
+              </FilterProvider>
+              } />
             <Route path="products/:itemId" element={<ProductItemPage />} />
             <Route path="basket" element={<Basket />} />
             <Route path="profile" element={<CustomerProfile />} />
