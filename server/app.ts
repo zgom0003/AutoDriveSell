@@ -6,6 +6,7 @@ import passport from "passport";
 import "./passport";
 import session from "express-session";
 import path from 'path';
+import rateLimit from "express-rate-limit";
 
 import authRouter, { loggedIn } from "./routes/auth";
 import profileRouter from "./routes/profile";
@@ -24,6 +25,15 @@ import cors from "cors";
 
 // use it before all route definitions
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
+
+// Rate limiting middleware
+app.use(
+  rateLimit({
+    windowMs: 1 * 60 * 1000, // 1 minute
+    max: 100, // Limit each IP to 100 requests per minute
+    message: "Too many requests from this IP, please try again later.",
+  })
+);
 
 app.use(
   session({
