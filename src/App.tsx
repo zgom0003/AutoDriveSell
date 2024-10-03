@@ -14,6 +14,8 @@ import Catalogue from "./pages/Catalogue/Catalogue";
 import Basket from "./pages/Basket/Basket";
 import ProductItemPage from './pages/Product-Item-Page/Product-Item.tsx';
 import CustomerProfile from "./pages/Profile/Profile.tsx";
+import Checkout from "./pages/Checkout/Checkout.tsx";
+import CheckoutSuccess from "./pages/Checkout/Success/CheckoutSuccess.tsx";
 
 function App() {
   return (
@@ -28,6 +30,8 @@ function App() {
             <Route path="products/:itemId" element={<ProductItemPage />} />
             <Route path="basket" element={<Basket />} />
             <Route path="profile" element={<CustomerProfile />} />
+            <Route path="checkout" element={<Checkout />} />
+            <Route path="checkout/success" element={<CheckoutSuccess />} />
 
           </Route>
         </Routes>
