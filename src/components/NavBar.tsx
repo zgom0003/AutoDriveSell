@@ -23,7 +23,7 @@ import { useState } from "react";
 import useUser from "../helpers/useUser";
 import { Dashboard } from "@mui/icons-material";
 
-const pages = ["home", "products", "contact us"];
+const pages = ["home", "products", "contact-us"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function NavBar() {
@@ -184,11 +184,11 @@ function NavBar() {
             {pages.map((page) => (
               <Button
                 key={page}
-                href={page === "home" ? "/" : page}
+                href={page === "home" ? "/" : "/" + page}
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
-                {page}
+                {page.replace("-", " ")}
               </Button>
             ))}
           </Box>
