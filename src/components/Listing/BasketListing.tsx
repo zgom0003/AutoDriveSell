@@ -11,17 +11,20 @@ import { getAvgRating } from "./Listing";
 export default function BasketListing(props: CatalogRetrieve) {
 
   const handleDelete = () => {
-
-    const KEY = 'basket';
+    const KEY = "basket";
 
     const readLS = () => {
-        const data = localStorage.getItem(KEY);
-        return data ? JSON.parse(data): [];
+      const data = localStorage.getItem(KEY);
+      return data ? JSON.parse(data) : [];
+    };
+
+    let cart: CatalogRetrieve[] = readLS();
+    const index = cart.findIndex((item) => item.id === props.id);
+    if (index !== -1) {
+      cart.splice(index, 1);
     }
 
-    const existingData = readLS();
-    const updateData = existingData.filter((item: ListingInfo) => item.price != props.productOptions[0].price);
-    localStorage.setItem(KEY, updateData);
+    localStorage.setItem(KEY, JSON.stringify(cart));
 
     window.location.reload();
   }
