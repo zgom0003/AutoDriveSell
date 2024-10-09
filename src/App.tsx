@@ -17,6 +17,7 @@ import CustomerProfile from "./pages/Profile/Profile.tsx";
 import { FilterProvider } from "./context/FilterFormContext.tsx";
 import Checkout from "./pages/Checkout/Checkout.tsx";
 import CheckoutSuccess from "./pages/Checkout/Success/CheckoutSuccess.tsx";
+import ContactUsPage from "./pages/ContactUs/ContactUs.tsx";
 
 function App() {
   return (
@@ -27,17 +28,20 @@ function App() {
             <Route index element={<Home />} />
             <Route path="admin" element={<AdminPage />} />
             <Route path="login-failure" element={<LoginFailurePage />} />
-            <Route path="products" element={
-              <FilterProvider>
-              <Catalogue />
-              </FilterProvider>
-              } />
+            <Route
+              path="products"
+              element={
+                <FilterProvider>
+                  <Catalogue />
+                </FilterProvider>
+              }
+            />
             <Route path="products/:itemId" element={<ProductItemPage />} />
+            <Route path="contact-us" element={<ContactUsPage />} />
             <Route path="basket" element={<Basket />} />
             <Route path="profile" element={<CustomerProfile />} />
             <Route path="checkout" element={<Checkout />} />
             <Route path="checkout/success" element={<CheckoutSuccess />} />
-
           </Route>
         </Routes>
       </BrowserRouter>
