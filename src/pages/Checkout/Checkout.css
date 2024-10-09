@@ -1,0 +1,46 @@
+.b-divider {
+    border-top: 1px;
+    border-style: solid;
+    border-color: lightgray;
+    width: 90%;
+}
+
+.bill {
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    height: 100px;
+    width: 400px;
+    padding: 20px;
+    margin: 20px;
+
+    border: 1px solid rgba(128, 128, 128, 0.199);
+    border-radius: 5px;
+
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.mainBox {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    padding-top: 40px;
+}
+
+.rating-text {
+    margin-left: 0;
+}
+
+@media (width < 1000px) {
+    .mainBox {
+        flex-direction: column;
+        align-items: center;
+    }
+
+}

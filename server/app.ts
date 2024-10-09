@@ -6,9 +6,11 @@ import passport from "passport";
 import "./passport";
 import session from "express-session";
 
+import rateLimit from "express-rate-limit";
 import authRouter, { loggedIn } from "./routes/auth";
 import profileRouter from "./routes/profile";
-import productRouter from "./routes/catalog";
+import catalogRouter from "./routes/catalog";
+import checkoutRouter from "./routes/checkout";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -22,6 +24,15 @@ import cors from "cors";
 
 // use it before all route definitions
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
+
+// Rate limiting middleware
+app.use(
+  rateLimit({
+    windowMs: 1 * 60 * 1000, // 1 minute
+    max: 100, // Limit each IP to 100 requests per minute
+    message: "Too many requests from this IP, please try again later.",
+  })
+);
 
 app.use(
   session({
@@ -43,11 +54,17 @@ app.use(passport.session());
 
 app.use(express.json());
 
-app.use("/api/products", productRouter);
+app.use("/api/products", catalogRouter);
 
 app.use("/auth", authRouter);
 
 app.use("/profile", profileRouter);
+
+app.use("/checkout", checkoutRouter);
+
+app.get("/", (req, res) => {
+  res.send("AutoDriveSell server is up and running!");
+});
 
 app.get("/protected", loggedIn, (req, res, next) => {
   res.json({ data: "protected data" });

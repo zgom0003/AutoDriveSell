@@ -3,6 +3,9 @@ import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import prisma from "./prisma/prismaClient";
 import { User } from "@prisma/client";
 
+import dotenv from "dotenv";
+dotenv.config();
+
 passport.use(
   new GoogleStrategy(
     {
