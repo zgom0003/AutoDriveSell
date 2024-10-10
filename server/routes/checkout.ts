@@ -23,12 +23,20 @@ router.post("/create-intent", async (req, res) => {
 
   const amount = prices.reduce((acc: number, price) => acc + price!, 0);
 
-  const intent = await stripe.paymentIntents.create({
-    amount: amount * 100,
-    currency: "aud",
-    automatic_payment_methods: { enabled: true },
-  });
-  res.json({ client_secret: intent.client_secret });
+  try {
+    const intent = await stripe.paymentIntents.create({
+      amount: amount * 100,
+      currency: "aud",
+      automatic_payment_methods: { enabled: true },
+    });
+
+    res.json({ client_secret: intent.client_secret });
+  
+  } catch (error) {
+    console.log(error)
+    res.json({ message: `Error creating stripe payment`})
+  }
+
 });
 
 export default router;

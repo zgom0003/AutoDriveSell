@@ -10,7 +10,7 @@ import Button from "@mui/material/Button";
 import Listing from "../../components/Listing/Listing";
 import Rating from "../../components/Rating/Rating";
 
-import { useEffect, useState, createContext, useContext } from "react";
+import { useEffect, useState } from "react";
 
 import "./Catalogue.css";
 import { CatalogRetrieve } from "../../types/catalog-retrieve";

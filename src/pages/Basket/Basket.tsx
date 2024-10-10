@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { ListingInfo } from "../../types/listing";
 
 import './Basket.css';
 import BasketListing from "../../components/Listing/BasketListing";
