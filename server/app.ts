@@ -22,6 +22,9 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 import cors from "cors";
 
+// Allow Nginx proxy
+app.set('trust proxy', 1)
+
 // use it before all route definitions
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 
@@ -56,22 +59,21 @@ app.use(express.json());
 
 app.use("/api/products", catalogRouter);
 
-app.use("/auth", authRouter);
+app.use("/api/auth", authRouter);
 
-app.use("/profile", profileRouter);
+app.use("/api/profile", profileRouter);
 
-app.use("/checkout", checkoutRouter);
+app.use("/api/checkout", checkoutRouter);
 
-app.get("/", (req, res) => {
+app.get("/api/", (req, res) => {
   res.send("AutoDriveSell server is up and running!");
 });
 
-app.get("/protected", loggedIn, (req, res, next) => {
+app.get("/api/protected", loggedIn, (req, res, next) => {
   res.json({ data: "protected data" });
 });
 
 app.listen(PORT, () => {
-  console.log(
-    `AutoDriveSell server listening on port ${PORT}\nhttp://localhost:${PORT}`
-  );
+  console.log(`AutoDriveSell server listening on port ${PORT}`);
+  console.log(`To get products, go to http://localhost/api/products`);
 });

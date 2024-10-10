@@ -60,7 +60,7 @@ export default function Catalogue() {
 
   // On mount, make this call to the server
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_REACT_APP_SERVER_URL}/api/products`)
+    fetch(`${import.meta.env.VITE_REACT_APP_SERVER_URL}/products`)
       .then((res) => res.json())
       .then((data: CatalogRetrieve[]) => {
         setProducts(data);
