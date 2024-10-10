@@ -22,7 +22,7 @@ export default function ProductItemPage() {
   if (!itemId) return null;
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_REACT_APP_SERVER_URL}/api/catalog/${itemId}`)
+    fetch(`${import.meta.env.VITE_REACT_APP_SERVER_URL}/api/products/${itemId}`)
       .then((res) => res.json())
       .then((data) => {
         setProductInfo(data);

@@ -5,9 +5,8 @@ import cookieParser from "cookie-parser";
 import passport from "passport";
 import "./passport";
 import session from "express-session";
-import path from 'path';
-import rateLimit from "express-rate-limit";
 
+import rateLimit from "express-rate-limit";
 import authRouter, { loggedIn } from "./routes/auth";
 import profileRouter from "./routes/profile";
 import catalogRouter from "./routes/catalog";
@@ -55,9 +54,7 @@ app.use(passport.session());
 
 app.use(express.json());
 
-app.use(catalogRouter);
-
-import { fileURLToPath } from "url";
+app.use("/api/products", catalogRouter);
 
 app.use("/auth", authRouter);
 
@@ -73,16 +70,8 @@ app.get("/protected", loggedIn, (req, res, next) => {
   res.json({ data: "protected data" });
 });
 
-
-const frontendDir = "../dist";
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-app.use(express.static(path.join(__dirname, frontendDir)));
-app.use("/assets", express.static(path.join(__dirname, frontendDir, "assets")));
-
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, frontendDir, "index.html"));
-});
-
 app.listen(PORT, () => {
-  console.log(`AutoDriveSell server listening on port ${PORT}`);
+  console.log(
+    `AutoDriveSell server listening on port ${PORT}\nhttp://localhost:${PORT}`
+  );
 });

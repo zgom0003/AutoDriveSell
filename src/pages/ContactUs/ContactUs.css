@@ -1,0 +1,55 @@
+/* Main container styling */
+.contact-container {
+  max-width: 600px;
+  margin: 32px auto;
+  padding: 20px;
+  text-align: center;
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Heading styling */
+.contact-container h1 {
+  color: #333;
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+/* Paragraph styling */
+.contact-container p {
+  color: #666;
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+}
+
+/* Contact information container */
+.contact-info {
+  display: flex;
+  justify-content: space-around;
+  gap: 20px;
+}
+
+/* Each contact item */
+.contact-item {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 250px;
+}
+
+/* Contact item heading */
+.contact-item h2 {
+  color: #007bff;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+/* Contact item text */
+.contact-item p {
+  color: #333;
+  font-size: 1rem;
+}
