@@ -57,11 +57,11 @@ app.use(express.json());
 
 app.use("/api/products", catalogRouter);
 
-app.use("/auth", authRouter);
-app.use("/admin", adminRouter);
-app.use("/profile", profileRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/admin", adminRouter);
+app.use("/api/profile", profileRouter);
 
-app.use("/checkout", checkoutRouter);
+app.use("/api/checkout", checkoutRouter);
 
 app.get("/", (req, res) => {
   res.send("AutoDriveSell server is up and running!");

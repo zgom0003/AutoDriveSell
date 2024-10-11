@@ -52,3 +52,5 @@ adminRouter.get("/", async (req, res) => {
     res.status(500).json({ message: "Failed to fetch products", error: error.message });
   }
 });
+
+export default adminRouter;
