@@ -9,6 +9,7 @@ import session from "express-session";
 import rateLimit from "express-rate-limit";
 import authRouter, { loggedIn } from "./routes/auth";
 import profileRouter from "./routes/profile";
+import adminRouter  from "./routes/adminRouter";
 import catalogRouter from "./routes/catalog";
 import checkoutRouter from "./routes/checkout";
 
@@ -58,11 +59,9 @@ app.use(passport.session());
 app.use(express.json());
 
 app.use("/api/products", catalogRouter);
-
 app.use("/api/auth", authRouter);
-
+app.use("/api/admin", adminRouter);
 app.use("/api/profile", profileRouter);
-
 app.use("/api/checkout", checkoutRouter);
 
 app.get("/api/", (req, res) => {
