@@ -9,7 +9,7 @@ export default function HomePage() {
   const [products, setProducts] = useState<CatalogRetrieve[]>([]);
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_REACT_APP_SERVER_URL}/api/catalog/popular?count=3`)
+    fetch(`${import.meta.env.VITE_REACT_APP_SERVER_URL}/products`)
       .then((res) => res.json())
       .then((data) => {
         setProducts(data);

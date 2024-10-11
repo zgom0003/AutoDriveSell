@@ -10,7 +10,7 @@ import Button from "@mui/material/Button";
 import Listing from "../../components/Listing/Listing";
 import Rating from "../../components/Rating/Rating";
 
-import { useEffect, useState, createContext, useContext } from "react";
+import { useEffect, useState } from "react";
 
 import "./Catalogue.css";
 import { CatalogRetrieve } from "../../types/catalog-retrieve";
@@ -60,7 +60,7 @@ export default function Catalogue() {
 
   // On mount, make this call to the server
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_REACT_APP_SERVER_URL}/api/products`)
+    fetch(`${import.meta.env.VITE_REACT_APP_SERVER_URL}/products`)
       .then((res) => res.json())
       .then((data: CatalogRetrieve[]) => {
         setProducts(data);

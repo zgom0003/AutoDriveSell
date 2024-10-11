@@ -19,10 +19,8 @@ export default function ProductItemPage() {
   const [productInfo, setProductInfo] = useState<CatalogRetrieve | null>(null);
   const { itemId } = useParams();
 
-  if (!itemId) return null;
-
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_REACT_APP_SERVER_URL}/api/products/${itemId}`)
+    fetch(`${import.meta.env.VITE_REACT_APP_SERVER_URL}/products/${itemId}`)
       .then((res) => res.json())
       .then((data) => {
         setProductInfo(data);
