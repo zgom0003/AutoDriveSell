@@ -75,7 +75,7 @@ export default function HomePage() {
               for your needs.
             </span>
           </div>
-          <img className="support-img" src="/support-2.jpg" />
+          <img className="support-img" src="/support-2.webp" />
         </Link>
       </div>
     </>
