@@ -3,7 +3,7 @@ import prisma from "./prismaClient";
 
 async function main() {
   // Put your Google SSO login emails here. These will be set as admin accounts in the databse.
-  const adminEmails = ["ayee0007@student.monash.edu, maja0001@student.monash.edu"];
+  const adminEmails = ["ayee0007@student.monash.edu", "maja0001@student.monash.edu"];
 
   adminEmails.forEach(async (email) => {
     await prisma.user.upsert({
@@ -12,6 +12,7 @@ async function main() {
       create: {
         email,
         isAdmin: true,
+        customer: { create: { firstName: "", lastName: "", address: "" } },
       },
     });
   });
