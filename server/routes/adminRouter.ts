@@ -4,25 +4,57 @@ import { loggedIn } from "./auth";
 
 const adminRouter = express.Router();
 
-// POST endpoint to add a new product
 adminRouter.post("/", async (req, res) => {
   const { name, description, price, imageUrl } = req.body;
+
+  // Validate required fields
+  if (!name || !price || !imageUrl) {
+    return res.status(400).json({ message: "Name, price, and imageUrl are required." });
+  }
+
+  // Validate and parse price
+  const priceInt = parseInt(price);
+  if (isNaN(priceInt)) {
+    return res.status(400).json({ message: "Invalid price value." });
+  }
+
   try {
-    // Creating the product without assigning an adminId since the schema hasn't changed
+    // Create the product
     const newProduct = await prisma.product.create({
       data: {
         name,
         description,
-        price: parseInt(price),
-        imageUrl
       },
     });
-    res.status(201).json(newProduct);
+
+    // Create a ProductOption
+    const productOption = await prisma.productOption.create({
+      data: {
+        productId: newProduct.id,
+        name: 'Default Option', // Adjust as needed
+        price: priceInt,
+      },
+    });
+
+    // Create a ProductImage
+    const productImage = await prisma.productImage.create({
+      data: {
+        productId: newProduct.id,
+        imageUrl,
+      },
+    });
+
+    res.status(201).json({
+      product: newProduct,
+      productOption,
+      productImage,
+    });
   } catch (error) {
     console.error('Error adding product:', error);
     res.status(500).json({ message: "Failed to add product", error: error.message });
   }
 });
+
 
 // GET endpoint to fetch all products (modify to filter by admin logic if possible)
 adminRouter.get("/", async (req, res) => {
@@ -39,6 +71,19 @@ adminRouter.get("/", async (req, res) => {
   } catch (error) {
     console.error('Error fetching products:', error);
     res.status(500).json({ message: "Failed to fetch products", error: error.message });
+  }
+});
+
+adminRouter.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    await prisma.product.delete({
+      where: { id: parseInt(id) },
+    });
+    res.status(200).json({ message: "Product deleted successfully" });
+  } catch (error) {
+    console.error('Error deleting product:', error);
+    res.status(500).json({ message: "Failed to delete product", error: error.message });
   }
 });
 
