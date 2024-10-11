@@ -4,17 +4,6 @@ import { loggedIn } from "./auth";
 
 const adminRouter = express.Router();
 
-// Middleware to check if the user is an admin
-function authenticateAdmin(req, res, next) {
-  if (!req.user || !req.user.isAdmin) {
-    return res.status(403).json({ message: "Access denied" });
-  }
-  next();
-}
-
-adminRouter.use(loggedIn);  // Ensures all routes are protected
-adminRouter.use(authenticateAdmin);  // Ensures only admins can access the routes
-
 // POST endpoint to add a new product
 adminRouter.post("/", async (req, res) => {
   const { name, description, price, imageUrl } = req.body;
