@@ -21,13 +21,32 @@ passport.use(
       const firstName: string = profile.name.givenName;
       const lastName: string = profile.name.familyName;
 
-      const user = await prisma.user.upsert({
-        where: { email: email },
-        create: { email: email },
-        update: {
-          customer: { upsert: { create: { firstName, lastName, address: "" }, update: {} } },
+      let user = await prisma.user.findUnique({ where: { email: email }, include: { customer: true } });
+      if (!user) {
+        user = await prisma.user.create({
+          data: {
+            email: email,
+            customer: {
+              create: {
+                firstName: firstName,
+                lastName: lastName,
+                address: "",
+              },
+            },
+          },
+          include: { customer: true },
+        });
+      }
+
+      await prisma.customer.update({
+        where: { id: user?.customer!.id },
+        data: {
+          firstName: firstName,
+          lastName: lastName,
+          address: "",
         },
       });
+
       return done(null, user);
     }
   )
