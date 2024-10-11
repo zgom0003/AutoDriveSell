@@ -29,7 +29,7 @@ export default function HomePage() {
           <p className="heading">Innovation.</p>
           <p className="heading">Freedom.</p>
           <p className="sub-heading">Self-Driving Solutions</p>
-          <Button variant="contained" color="secondary" size="large">
+          <Button variant="contained" color="secondary" size="large" href="/products">
             EXPLORE NOW
           </Button>
         </div>
