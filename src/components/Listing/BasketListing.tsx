@@ -1,7 +1,6 @@
 import "./BasketListing.css";
 import "./Listing.css";
 
-import { ListingInfo } from "../../types/listing";
 import Rating from "../Rating/Rating";
 import { Link } from "react-router-dom";
 import { Button } from "@mui/material";

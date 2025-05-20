@@ -21,18 +21,22 @@ async function main() {
   // Add initial product catalog
   await prisma.product.create({
     data: {
-      name: "Product One",
-      description: "Product one description",
+      name: 'Lidar Sensor Kit',
+      description: 'High-resolution Lidar sensor for real-time 3D mapping',
+      vehicletype: 'Electric Car',
+      technology: 'Lidar',
+      application: 'Environment Mapping',
+      installation: 'Front Bumper Mount',
+      productOptions: {
+        create: [
+          { name: 'Standard', price: 500 },
+          { name: 'Pro', price: 800 },
+        ],
+      },
       images: {
         create: {
           imageUrl:
-            "https://images.drive.com.au/driveau/image/upload/c_fill,f_auto,g_auto,h_1080,q_auto:eco,w_1920/v1/cms/uploads/jmnrqauksfaore9gv7bn",
-        },
-      },
-      productOptions: {
-        create: {
-          name: "Option 1",
-          price: 120,
+            "https://images.unsplash.com/photo-1617531653520-4893f7bbf978?q=80&w=2020&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
         },
       },
     },
@@ -40,15 +44,18 @@ async function main() {
 
   await prisma.product.create({
     data: {
-      name: "Product Two",
-      description: "Product two description",
+      name: 'AI Driving Computer',
+      description: 'High-performance computer for autonomous navigation',
+      vehicletype: 'Autonomous Bus',
+      technology: 'Edge AI',
+      application: 'Autonomous Control',
+      installation: 'Dashboard',
+      productOptions: {
+        create: [{ name: 'Xtreme AI', price: 1500 }],
+      },
       images: {
         createMany: {
           data: [
-            {
-              imageUrl:
-                "https://images.drive.com.au/driveau/image/upload/c_fill,f_auto,g_auto,h_1080,q_auto:eco,w_1920/v1/cms/uploads/jmnrqauksfaore9gv7bn",
-            },
             {
               imageUrl:
                 "https://images.unsplash.com/photo-1533106418989-88406c7cc8ca?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -61,15 +68,6 @@ async function main() {
               imageUrl:
                 "https://images.unsplash.com/photo-1617531653520-4893f7bbf978?q=80&w=2020&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
             },
-          ],
-        },
-      },
-
-      productOptions: {
-        createMany: {
-          data: [
-            { name: "Option One", price: 70 },
-            { name: "Option Two", price: 90 },
           ],
         },
       },

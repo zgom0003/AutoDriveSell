@@ -12,11 +12,6 @@ interface FilterContextProps {
   setMaxPrice: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const SortingOptions = {
-  PRICE_ASSENDING: 0,
-  PRICE_DECENDING: 1,
-};
-
 const FilterContext = createContext<FilterContextProps | undefined>(undefined);
 
 const FilterProvider: React.FC<{ children: ReactNode }> = ({ children }) => {

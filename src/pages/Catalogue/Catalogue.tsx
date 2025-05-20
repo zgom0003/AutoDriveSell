@@ -5,7 +5,6 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
-import Button from "@mui/material/Button";
 
 import Listing from "../../components/Listing/Listing";
 import Rating from "../../components/Rating/Rating";

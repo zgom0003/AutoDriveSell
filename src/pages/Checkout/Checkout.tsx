@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { Button } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import BasketListing from "../../components/Listing/BasketListing";
 import { CatalogRetrieve } from "../../types/catalog-retrieve";
 import "./Checkout.css";
@@ -79,7 +78,7 @@ function Items({ items }) {
 }
 
 function Bill({ items }: { items: CatalogRetrieve[] }) {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   return (
     <>
       <div className="bill">

@@ -17,6 +17,10 @@ model Product {
   category       ProdCategory[]
   carts          Cart[]
   orders         Order[]
+  vehicletype    String?
+  technology     String?
+  application    String?
+  installation   String?
 }
 
 model ProdCategory {
