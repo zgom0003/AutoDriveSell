@@ -6,6 +6,10 @@ export interface CatalogRetrieve {
   id: number;
   name: string;
   description: string;
+  vehicletype: string;
+  technology: string;
+  application: string;
+  installation: string;
   images: ProductImages[];
   productOptions: ProductOption[];
   reviews: Review[];

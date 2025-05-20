@@ -74,21 +74,21 @@ export default function ProductItemPage() {
               <TableBody>
                 <TableRow>
                   <TableCell sx={{ borderRight: 1, borderRightColor: "#E0E0E0", width: "25%" }}>Vehicle Type</TableCell>
-                  <TableCell>item.vehicletype</TableCell>
+                  <TableCell>{productInfo.vehicletype || "N/A"}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell sx={{ borderRight: 1, borderRightColor: "#E0E0E0", width: "25%" }}>Technology</TableCell>
-                  <TableCell>item.technology</TableCell>
+                  <TableCell>{productInfo.technology || "N/A"}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell sx={{ borderRight: 1, borderRightColor: "#E0E0E0", width: "25%" }}>Application</TableCell>
-                  <TableCell>item.application</TableCell>
+                  <TableCell>{productInfo.application || "N/A"}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell sx={{ borderRight: 1, borderRightColor: "#E0E0E0", width: "25%" }}>
                     Installation Requirements
                   </TableCell>
-                  <TableCell>item.installation</TableCell>
+                  <TableCell>{productInfo.installation || "N/A"}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
@@ -118,14 +118,14 @@ function addToCart(itemListing: CatalogRetrieve) {
   const KEY = 'basket';
 
   const readLS = () => {
-      const data = localStorage.getItem(KEY);
-      return data ? JSON.parse(data): [];
+    const data = localStorage.getItem(KEY);
+    return data ? JSON.parse(data) : [];
   }
 
-    const addLS = (value: any) => {
-      const existingData = readLS();
-      existingData.push(value);
-      localStorage.setItem(KEY, JSON.stringify(existingData));
+  const addLS = (value: any) => {
+    const existingData = readLS();
+    existingData.push(value);
+    localStorage.setItem(KEY, JSON.stringify(existingData));
   }
 
   addLS(itemListing)

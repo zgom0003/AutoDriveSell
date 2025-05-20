@@ -18,8 +18,25 @@ async function main() {
   });
   console.log("Inserted admin user emails");
 
+  // Create a user and customer
+  const user1 = await prisma.user.create({
+    data: {
+      email: 'john.doe@example.com',
+      isAdmin: false,
+      customer: {
+        create: {
+          firstName: 'John',
+          lastName: 'Doe',
+          address: '123 AI Street, Silicon Valley',
+          phoneNumber: '1234567890',
+        },
+      },
+    },
+    include: { customer: true },
+  });
+
   // Add initial product catalog
-  await prisma.product.create({
+  const product1 = await prisma.product.create({
     data: {
       name: 'Lidar Sensor Kit',
       description: 'High-resolution Lidar sensor for real-time 3D mapping',
@@ -42,7 +59,7 @@ async function main() {
     },
   });
 
-  await prisma.product.create({
+  const product2 = await prisma.product.create({
     data: {
       name: 'AI Driving Computer',
       description: 'High-performance computer for autonomous navigation',
@@ -74,6 +91,25 @@ async function main() {
     },
   });
   console.log("Inserted sample products");
+
+  // Create a review
+  await prisma.review.create({
+    data: {
+      productId: product1.id,
+      customerId: user1.customer!.id,
+      rating: 4.5,
+      description: 'Excellent range and accuracy.',
+    },
+  });
+
+  await prisma.review.create({
+    data: {
+      productId: product2.id,
+      customerId: user1.customer!.id,
+      rating: 3.5,
+      description: 'Good, but a bit pricey.',
+    },
+  });
 }
 main()
   .then(async () => {
