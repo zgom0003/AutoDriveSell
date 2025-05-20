@@ -11,16 +11,16 @@ model Product {
   id             Int             @id @default(autoincrement())
   name           String          @db.Text
   description    String?         @db.Text
+  vehicletype    String?         @db.Text
+  technology     String?         @db.Text
+  application    String?         @db.Text
+  installation   String?         @db.Text
   reviews        Review[]
   productOptions ProductOption[]
   images         ProductImage[]
   category       ProdCategory[]
   carts          Cart[]
   orders         Order[]
-  vehicletype    String?
-  technology     String?
-  application    String?
-  installation   String?
 }
 
 model ProdCategory {

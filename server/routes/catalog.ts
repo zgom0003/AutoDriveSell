@@ -23,7 +23,11 @@ router.get("/:id", async (req, res) => {
 
   const product = await prisma.product.findFirst({
     where: { id: itemId },
-    include: { productOptions: true, reviews: true, images: true },
+    include: {
+      productOptions: true,
+      reviews: { include: { customer: true } },
+      images: true
+    },
   });
 
   if (!product) return res.status(404).json({ message: "Product id not found." });

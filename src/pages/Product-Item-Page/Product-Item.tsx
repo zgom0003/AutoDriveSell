@@ -18,6 +18,13 @@ import "./Product-Item.css";
 export default function ProductItemPage() {
   const [productInfo, setProductInfo] = useState<CatalogRetrieve | null>(null);
   const { itemId } = useParams();
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_REACT_APP_SERVER_URL}/products/${itemId}`)
@@ -26,7 +33,7 @@ export default function ProductItemPage() {
         setProductInfo(data);
         console.log(data);
       });
-  }, []);
+  }, [itemId]);
 
   if (!productInfo) return null;
 
@@ -36,10 +43,25 @@ export default function ProductItemPage() {
         <Grid container spacing={4}>
           <Grid item xs={12} md={6}>
             {/* Left Side - Image Carousel */}
-            <Carousel animation="slide" navButtonsAlwaysVisible autoPlay={false}>
+            <Carousel
+              key={windowWidth}
+              animation="slide"
+              navButtonsAlwaysVisible
+              autoPlay={false}
+            >
               {productInfo.images.map((item, i) => (
-                <div key={i}>
-                  <img src={item.imageUrl} style={{ width: "100%", height: "35vh", objectFit: "cover" }} />
+                <div key={i} style={{ width: "100%", height: "40vw", maxHeight: 400, minHeight: 200 }}>
+                  <img
+                    src={item.imageUrl}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      borderRadius: 8,
+                      display: "block"
+                    }}
+                    alt={`Product image ${i + 1}`}
+                  />
                 </div>
               ))}
             </Carousel>
@@ -97,14 +119,22 @@ export default function ProductItemPage() {
 
         <h2>Customer Reviews</h2>
         <Grid item paddingTop={"35px"}>
-          <Container sx={{ borderRadius: 2, height: "40px", alignContent: "center" }}>
-            {productInfo.reviews.length > 0 &&
+          <Container sx={{ borderRadius: 2, minHeight: "40px", alignContent: "center" }}>
+            {productInfo.reviews.length > 0 ? (
               productInfo.reviews.map((review, i) => (
-                <div key={i}>
+                <div key={i} style={{ marginBottom: "16px" }}>
+                  <strong>
+                    {review.customer?.firstName
+                      ? `${review.customer.firstName} ${review.customer.lastName || ""}`
+                      : "Anonymous"}
+                  </strong>
                   <Rating rating={review.rating} />
                   <p>{review.description}</p>
                 </div>
-              ))}
+              ))
+            ) : (
+              <p>No reviews yet.</p>
+            )}
           </Container>
         </Grid>
         {/* <p>Add Review with Rating here</p> */}
