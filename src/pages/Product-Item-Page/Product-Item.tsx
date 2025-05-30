@@ -9,16 +9,23 @@ import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import { useEffect, useState } from "react";
 import Carousel from "react-material-ui-carousel";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { getAvgRating } from "../../components/Listing/Listing";
 import Rating from "../../components/Rating/Rating";
 import { CatalogRetrieve } from "../../types/catalog-retrieve";
 import "./Product-Item.css";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
 
 export default function ProductItemPage() {
   const [productInfo, setProductInfo] = useState<CatalogRetrieve | null>(null);
   const { itemId } = useParams();
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [cartCount, setCartCount] = useState(0);
+  const [openDialog, setOpenDialog] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -35,7 +42,45 @@ export default function ProductItemPage() {
       });
   }, [itemId]);
 
+  useEffect(() => {
+    // Initialize cart count on mount
+    const KEY = 'basket';
+    const basket = JSON.parse(localStorage.getItem(KEY) || "[]");
+    setCartCount(basket.length);
+
+    // Listen for cart changes in other tabs
+    const handleStorage = () => {
+      const updatedBasket = JSON.parse(localStorage.getItem(KEY) || "[]");
+      setCartCount(updatedBasket.length);
+    };
+    window.addEventListener("storage", handleStorage);
+    return () => window.removeEventListener("storage", handleStorage);
+  }, []);
+
   if (!productInfo) return null;
+
+  function addToCart(itemListing: CatalogRetrieve) {
+    const KEY = 'basket';
+
+    const readLS = () => {
+      const data = localStorage.getItem(KEY);
+      return data ? JSON.parse(data) : [];
+    };
+
+    const addLS = (value: any) => {
+      const existingData = readLS();
+      existingData.push(value);
+      localStorage.setItem(KEY, JSON.stringify(existingData));
+    };
+
+    addLS(itemListing);
+
+    setOpenDialog(true);
+    setCartCount(readLS().length);
+
+    // Notify other components (including NavBar) in this tab
+    window.dispatchEvent(new Event("basketUpdate"));
+  }
 
   return (
     <main>
@@ -117,9 +162,18 @@ export default function ProductItemPage() {
           </TableContainer>
         </Grid>
 
-        <h2>Customer Reviews</h2>
         <Grid item paddingTop={"35px"}>
-          <Container sx={{ borderRadius: 2, minHeight: "40px", alignContent: "center" }}>
+          <h2>Customer Reviews</h2>
+          <Container sx={{ padding: 2, borderRadius: 2, backgroundColor: "#F5F5F5" }}>
+            <div style={{ display: 'flex', alignItems: 'center', fontFamily: 'sans-serif' }}>
+              <Rating rating={getAvgRating(productInfo.reviews)} />
+              <span style={{ margin: '0 8px' }}>|</span>
+              <span style={{ fontSize: 14 }}>
+                {productInfo.reviews.length} Review{productInfo.reviews.length !== 1 ? 's' : ''}
+              </span>
+            </div>
+          </Container>
+          <Container sx={{ padding: 2, borderRadius: 2, minHeight: "40px", alignContent: "center" }}>
             {productInfo.reviews.length > 0 ? (
               productInfo.reviews.map((review, i) => (
                 <div key={i} style={{ marginBottom: "16px" }}>
@@ -137,29 +191,21 @@ export default function ProductItemPage() {
             )}
           </Container>
         </Grid>
-        {/* <p>Add Review with Rating here</p> */}
+        <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+          <DialogTitle>Added to Cart!</DialogTitle>
+          <DialogContent>
+            The item has been added to your cart.
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpenDialog(false)} color="primary">
+              Continue Shopping
+            </Button>
+            <Button onClick={() => navigate("/checkout")} color="primary" variant="contained">
+              Checkout
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Container>
     </main>
   );
-}
-
-function addToCart(itemListing: CatalogRetrieve) {
-
-  const KEY = 'basket';
-
-  const readLS = () => {
-    const data = localStorage.getItem(KEY);
-    return data ? JSON.parse(data) : [];
-  }
-
-  const addLS = (value: any) => {
-    const existingData = readLS();
-    existingData.push(value);
-    localStorage.setItem(KEY, JSON.stringify(existingData));
-  }
-
-  addLS(itemListing)
-
-  alert('Added to Cart!');
-
 }
