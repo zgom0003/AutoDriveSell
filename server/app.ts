@@ -9,9 +9,10 @@ import session from "express-session";
 import rateLimit from "express-rate-limit";
 import authRouter, { loggedIn } from "./routes/auth";
 import profileRouter from "./routes/profile";
-import adminRouter  from "./routes/adminRouter";
+import adminRouter from "./routes/adminRouter";
 import catalogRouter from "./routes/catalog";
 import checkoutRouter from "./routes/checkout";
+import chatbotRouter from "./routes/chatbot";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -63,6 +64,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/profile", profileRouter);
 app.use("/api/checkout", checkoutRouter);
+app.use("/api/chatbot", chatbotRouter);
 
 app.get("/api/", (req, res) => {
   res.send("AutoDriveSell server is up and running!");

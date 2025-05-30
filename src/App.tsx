@@ -18,6 +18,7 @@ import { FilterProvider } from "./context/FilterFormContext.tsx";
 import Checkout from "./pages/Checkout/Checkout.tsx";
 import CheckoutSuccess from "./pages/Checkout/Success/CheckoutSuccess.tsx";
 import ContactUsPage from "./pages/ContactUs/ContactUs.tsx";
+import ChatBot from "./components/ChatBot/ChatBot.tsx";
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
             <Route path="checkout/success" element={<CheckoutSuccess />} />
           </Route>
         </Routes>
+        <ChatBot />
       </BrowserRouter>
     </ThemeProvider>
   );
