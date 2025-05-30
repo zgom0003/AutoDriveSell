@@ -19,7 +19,7 @@ import MenuItem from "@mui/material/MenuItem";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useUser from "../helpers/useUser";
 import { Dashboard } from "@mui/icons-material";
 
@@ -32,14 +32,25 @@ function NavBar() {
   // const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const { user } = useUser();
   const navigate = useNavigate();
+  const [cartCount, setCartCount] = useState(0);
 
-  // useEffect(() => {
-  //   fetch(`${import.meta.env.VITE_REACT_APP_SERVER_URL}/auth/status`, { credentials: "include", mode: "cors" })
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       setLoggedIn(data.loggedIn);
-  //     });
-  // }, []);
+  useEffect(() => {
+    const KEY = "basket";
+    const updateCartCount = () => {
+      const basket = JSON.parse(localStorage.getItem(KEY) || "[]");
+      setCartCount(basket.length);
+    };
+    updateCartCount();
+
+    window.addEventListener("storage", updateCartCount);
+    // Also listen for changes in this tab
+    window.addEventListener("basketUpdate", updateCartCount);
+
+    return () => {
+      window.removeEventListener("storage", updateCartCount);
+      window.removeEventListener("basketUpdate", updateCartCount);
+    };
+  }, []);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -122,142 +133,145 @@ function NavBar() {
             Auto Drive Sell
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: "block", md: "none" },
-              }}
-            >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Link to={"/" + page}>{page}</Link>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-          <Box
-            component="img"
-            sx={{ display: { xs: "flex", md: "none" }, mr: 1, borderRadius: "8px", height: "40px", width: "40px" }}
-            src="/AutoDriveSell-logo-image.png"
-          />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: "flex", md: "none" },
-              flexGrow: 1,
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            Auto Drive Sell
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                href={page === "home" ? "/" : '/' + page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
+          <Box sx={{ flexGrow: 1 }} />
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+              <IconButton
+                size="large"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleOpenNavMenu}
+                color="inherit"
               >
-                {page.replace("-", " ")}
-              </Button>
-            ))}
-          </Box>
+                <MenuIcon />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorElNav}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "left",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "left",
+                }}
+                open={Boolean(anchorElNav)}
+                onClose={handleCloseNavMenu}
+                sx={{
+                  display: { xs: "block", md: "none" },
+                }}
+              >
+                {pages.map((page) => (
+                  <MenuItem key={page} onClick={handleCloseNavMenu}>
+                    <Link to={"/" + page}>{page}</Link>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+            <Box
+              component="img"
+              sx={{ display: { xs: "flex", md: "none" }, mr: 1, borderRadius: "8px", height: "40px", width: "40px" }}
+              src="/AutoDriveSell-logo-image.png"
+            />
+            <Typography
+              variant="h5"
+              noWrap
+              component="a"
+              href="/"
+              sx={{
+                mr: 2,
+                display: { xs: "flex", md: "none" },
+                flexGrow: 1,
+                fontFamily: "monospace",
+                fontWeight: 700,
+                letterSpacing: ".3rem",
+                color: "inherit",
+                textDecoration: "none",
+              }}
+            >
+              Auto Drive Sell
+            </Typography>
+            <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+              {pages.map((page) => (
+                <Button
+                  key={page}
+                  href={page === "home" ? "/" : '/' + page}
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: "white", display: "block" }}
+                >
+                  {page.replace("-", " ")}
+                </Button>
+              ))}
+            </Box>
 
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase placeholder="Search…" inputProps={{ "aria-label": "search" }} />
-          </Search>
-          <Box sx={{ flexGrow: 0, pl: 3, pr: 3 }}>
-            <IconButton aria-label="cart" component={Link} to="/basket">
-              <Badge badgeContent={4} color="secondary">
-                <ShoppingCartIcon />
-              </Badge>
-            </IconButton>
-          </Box>
-          {user?.isAdmin && (
-            <Box sx={{ flexGrow: 0, pl: 0, pr: 3 }}>
-              <IconButton aria-label="admin" component={Link} to="/admin">
-                <Dashboard />
+            <Search>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase placeholder="Search…" inputProps={{ "aria-label": "search" }} />
+            </Search>
+            <Box sx={{ flexGrow: 0, pl: 3, pr: 3 }}>
+              <IconButton aria-label="cart" component={Link} to="/basket">
+                <Badge badgeContent={cartCount} color="secondary">
+                  <ShoppingCartIcon />
+                </Badge>
               </IconButton>
             </Box>
-          )}
-          <Box>
-            <Tooltip title="User">
-              {user ? (
-                user.isAdmin ? (
-                  <IconButton onClick={() => navigate("/profile")} sx={{ p: 0 }}>
-                    <Avatar>{<AdminPanelSettingsIcon />}</Avatar>
-                  </IconButton>
+            {user?.isAdmin && (
+              <Box sx={{ flexGrow: 0, pl: 0, pr: 3 }}>
+                <IconButton aria-label="admin" component={Link} to="/admin">
+                  <Dashboard />
+                </IconButton>
+              </Box>
+            )}
+            <Box>
+              <Tooltip title="User">
+                {user ? (
+                  user.isAdmin ? (
+                    <IconButton onClick={() => navigate("/profile")} sx={{ p: 0 }}>
+                      <Avatar>{<AdminPanelSettingsIcon />}</Avatar>
+                    </IconButton>
+                  ) : (
+                    <IconButton onClick={() => navigate("/profile")} sx={{ p: 0 }}>
+                      <Avatar>{<PersonIcon />}</Avatar>
+                    </IconButton>
+                  )
                 ) : (
-                  <IconButton onClick={() => navigate("/profile")} sx={{ p: 0 }}>
-                    <Avatar>{<PersonIcon />}</Avatar>
-                  </IconButton>
-                )
-              ) : (
-                <Button
-                  variant="outlined"
-                  color="secondary"
-                  size="large"
-                  onClick={() => window.open(`${import.meta.env.VITE_REACT_APP_SERVER_URL}/auth/google`, "_self")}
-                >
-                  Log in
-                </Button>
-              )}
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
+                  <Button
+                    variant="outlined"
+                    color="secondary"
+                    size="large"
+                    onClick={() => window.open(`${import.meta.env.VITE_REACT_APP_SERVER_URL}/auth/google`, "_self")}
+                  >
+                    Log in
+                  </Button>
+                )}
+              </Tooltip>
+              <Menu
+                sx={{ mt: "45px" }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {settings.map((setting) => (
+                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                    <Typography textAlign="center">{setting}</Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
           </Box>
         </Toolbar>
       </Container>

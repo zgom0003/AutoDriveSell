@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-
-// import { useNavigate } from "react-router-dom";
+import { Button, Container, Grid } from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { useNavigate } from "react-router-dom";
 import BasketListing from "../../components/Listing/BasketListing";
 import { CatalogRetrieve } from "../../types/catalog-retrieve";
 import "./Checkout.css";
@@ -17,6 +18,7 @@ const KEY = "basket";
 
 export default function Basket() {
   const [items, setItems] = useState<CatalogRetrieve[] | null>(null);
+  const navigate = useNavigate();
 
   // Read items
   useEffect(() => {
@@ -35,22 +37,29 @@ export default function Basket() {
   const paymentAmount = items.reduce((acc, item) => acc + item.productOptions[0].price, 0);
 
   return (
-    <div className="mainBox" style={{}}>
-      <Elements
-        stripe={stripePromise}
-        options={{
-          mode: "payment",
-          amount: paymentAmount,
-          currency: "aud",
-          // More options available here: https://stripe.com/docs/js/elements_object/create_element?type=payment#elements_create_payment_element-options
-          // Fully customizable with appearance API.
-          appearance: {},
-        }}
-      >
-        <CheckoutForm checkoutItems={items} />
-      </Elements>
-      <Bill items={items} />
-    </div>
+    <main>
+      <Container sx={{ paddingTop: 2 }}>
+        <Button variant="outlined" startIcon={<ArrowBackIcon />} onClick={() => navigate("/basket")}>
+          Back to cart
+        </Button>
+      </Container>
+      <div className="checkoutBox">
+        <Elements
+          stripe={stripePromise}
+          options={{
+            mode: "payment",
+            amount: paymentAmount,
+            currency: "aud",
+            // More options available here: https://stripe.com/docs/js/elements_object/create_element?type=payment#elements_create_payment_element-options
+            // Fully customizable with appearance API.
+            appearance: {},
+          }}
+        >
+          <CheckoutForm checkoutItems={items} />
+        </Elements>
+        <Bill items={items} />
+      </div>
+    </main>
   );
 }
 
